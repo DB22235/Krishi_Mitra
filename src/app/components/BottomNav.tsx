@@ -1,4 +1,10 @@
+
 //src/components/BottomNav.tsx
+
+
+
+// src/components/BottomNav.tsx
+
 import { Home, Search, FileText, MessageCircle, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';

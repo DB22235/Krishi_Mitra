@@ -1,3 +1,4 @@
+
 // src/screens/SchemeDiscovery.tsx
 import { useState, useMemo } from 'react';
 import { ArrowLeft, Search, Mic, Filter, Sparkles } from 'lucide-react';

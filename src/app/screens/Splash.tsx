@@ -1,3 +1,4 @@
+
 // src/screens/Splash.tsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
