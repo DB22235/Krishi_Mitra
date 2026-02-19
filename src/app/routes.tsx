@@ -5,7 +5,7 @@ import { Splash } from "./screens/Splash";
 import { OnboardingProfile } from "./screens/OnboardingProfile";
 import { OnboardingFarmDetails } from "./screens/OnboardingFarmDetails";
 import { Dashboard } from "./screens/Dashboard";
-import { Chat } from "./screens/Chat";
+import  Chat  from "./screens/Chat";
 import { SchemeDiscovery } from "./screens/SchemeDiscovery";
 import { SchemeDetail } from "./screens/SchemeDetail";
 import { ApplicationWizard } from "./screens/ApplicationWizard";
