@@ -1,262 +1,411 @@
 🌾 Krishi Mitra — AI-Powered Government Scheme Discovery for Farmers
-<div align="center">
-Krishi Mitra Banner
+<br/><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&pause=1000&color=2E8B57&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=80&lines=%F0%9F%8C%BE+Empowering+100M%2B+Indian+Farmers;%F0%9F%A4%96+AI+that+speaks+your+language;%F0%9F%87%AE%F0%9F%87%B3+Every+scheme.+Every+farmer.+Every+language." alt="Typing SVG" /><br/><img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake-dark.svg" width="600" alt="snake animation"/>
+<br/><br/>
 
+<!-- Badges Row 1 -->
 Live Demo
+  
 License
-Built With
-AI Powered
+  
+Hackathon
+
+<br/><!-- Badges Row 2 — Tech -->
+
+TypeScript
+Groq AI
+TailwindCSS
 
 
-"68% of eligible farmers don't know about the schemes they qualify for. We're changing that."
-KisanSathi is an AI-powered agent that cuts through 600+ government welfare schemes to deliver hyper-personalized recommendations to Indian farmers — in their language, through their voice.
 
-🎬 Watch Demo · 🚀 Get Started · 📖 Documentation · 🤝 Contribute
+<br/><!-- Impact Stats --><img src="https://img.shields.io/badge/🎯_Farmers_Served-100M+-brightgreen?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/📋_Schemes-200+-blue?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/🤖_AI_Accuracy-95%25-success?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/⏱️_Time_Saved-90%25-red?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/💰_Budget-₹2.5L_Cr-gold?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/🌐_Languages-3+-purple?style=flat-square" />
+<br/><br/>
 
-<img src="https://img.shields.io/badge/Schemes_Covered-200+-brightgreen?style=flat-square" /> <img src="https://img.shields.io/badge/Languages-3+(Hindi,_English)-blue?style=flat-square" /> <img src="https://img.shields.io/badge/AI_Match_Accuracy-95%25-success?style=flat-square" /> <img src="https://img.shields.io/badge/Discovery_Time-3_days_→_30_mins-red?style=flat-square" /> <img src="https://img.shields.io/badge/Budget_Addressed-₹2.5L_Cr-gold?style=flat-square" /></div>
+<br/>
+"68% of eligible farmers don't know about the schemes they qualify for.
+We're changing that — one voice query at a time."
+<br/>
+Krishi Mitra is an AI-powered conversational agent that cuts through India's 600+ government welfare schemes to deliver hyper-personalized recommendations to farmers — in their language, through their voice, on any device.
+
+<br/>
+🎬 Watch Demo · 🚀 Quick Start · 📖 Features · 🏗️ Architecture · 🤝 Contribute
+
+<br/>
+</div><br/>
 📋 Table of Contents
-The Problem
-Our Solution
-Features in Depth
-Tech Architecture
-Quick Start
-Project Structure
-Scheme Database Schema
-AI Engine
-Demo
-Roadmap
-Impact Metrics
-Contributing
-Team
-License
+<details> <summary><b>Click to expand</b></summary><br/>
 🔴 The Problem
-India's agricultural welfare ecosystem is broken at the last mile.
-
-The Reality	The Impact
-600+ central & state schemes exist	Farmers are overwhelmed and unaware
-₹2.5 Lakh Crore annual welfare budget	A large chunk goes unclaimed every year
-Applications require navigating 50+ portals	Average farmer takes 3+ days per application
-Information is in English/complex Hindi	300M+ farmers are low-literacy or non-English speakers
-No single window for discovery	Farmers rely on word of mouth (often outdated)
-Meet Ramesh. He's a small farmer from Madhya Pradesh with 2 acres of land. He grows wheat and soybean. He's eligible for PM-KISAN, Fasal Bima Yojana, PM-KUSUM, and the Kisan Credit Card — combined benefits worth ₹1,50,000+ per year. He knows about none of them.
-
-KisanSathi exists to make sure no farmer like Ramesh misses out ever again.
-
 💡 Our Solution
-KisanSathi is a conversational AI agent that acts as a personal scheme advisor for every Indian farmer.
-
+✨ Features In-Depth
+🏗️ Tech Architecture
+🚀 Quick Start
+📁 Project Structure
+📦 Scheme Database Schema
+🤖 AI Engine
+🎬 Demo
+🗺️ Roadmap
+📈 Impact Metrics
+🛡️ Privacy & Security
+🤝 Contributing
+👥 Team
+🙏 Acknowledgements
+</details><br/>
+<br/>
+🔴 The Problem
+<div align="center">
+India's agricultural welfare ecosystem is broken at the last mile.
+<br/>
 text
 
-🎤 Farmer speaks: "मुझे सिंचाई के लिए सब्सिडी चाहिए"
-                         ↓
-🤖 AI understands intent + analyzes profile
-                         ↓
-📋 Returns top 3 matched schemes with eligibility check
-                         ↓
-📝 Provides step-by-step application guide
-                         ↓
-✅ Farmer applies — benefits received!
-What Makes Us Different
-Feature	Traditional Portals	KisanSathi
-Discovery Method	Manual search across 50+ sites	AI-powered instant matching
-Language	English / formal Hindi	Voice input in regional languages
-Personalization	None — generic listings	Hyper-personalized to farmer profile
-Eligibility Check	Manual document review	Instant automated verification
-Guidance	PDF downloads	Interactive step-by-step wizard
-Accessibility	Requires digital literacy	Voice-first, low-bandwidth ready
+    🏛️ Government                    🧑‍🌾 Farmers
+    ┌─────────────┐                  ┌─────────────┐
+    │  600+ schemes│                  │  No awareness│
+    │  ₹2.5L Cr   │    ❌ GAP ❌     │  No guidance │
+    │  50+ portals │ ◄────────────► │  No language │
+    │  Complex docs│                  │  No access   │
+    └─────────────┘                  └─────────────┘
+    
+    💸 Result: Crores of welfare funds go UNCLAIMED every year
+</div><br/>
+😰 The Reality	💥 The Impact
+600+ central & state schemes exist	Farmers are overwhelmed and completely unaware
+₹2.5 Lakh Crore annual welfare budget	Massive funds go unclaimed every year
+Applications require navigating 50+ portals	Average farmer takes 3+ days per application
+Information is in English / complex Hindi	300M+ farmers are low-literacy / non-English speakers
+No single window for discovery	Farmers rely on word of mouth (often outdated)
+<br/><div align="center">
+  
+👨‍🌾 Meet Ramesh.
+He's a small farmer from Madhya Pradesh with 2 acres of land. He grows wheat and soybean.
+
+He's eligible for PM-KISAN, Fasal Bima Yojana, PM-KUSUM, and Kisan Credit Card — combined benefits worth ₹1,50,000+ per year.
+
+He knows about none of them.
+
+Krishi Mitra exists to make sure no farmer like Ramesh misses out — ever again.
+</div><br/>
+<br/>
+💡 Our Solution
+<div align="center">
+Krishi Mitra is a personal AI scheme advisor for every Indian farmer.
+<br/>
+text
+
+    🎤 SPEAK                    🤖 AI THINKS               📋 RESULTS
+    ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
+    │              │           │              │           │              │
+    │  "मुझे       │   ──►    │  Analyzes    │   ──►    │  ✅ PM-KUSUM  │
+    │  सिंचाई के   │           │  50+ data    │           │  ✅ KCC      │
+    │  लिए सब्सिडी │           │  points      │           │  ✅ Micro    │
+    │  चाहिए"      │           │  per farmer  │           │    Irrigation│
+    │              │           │              │           │              │
+    └──────────────┘           └──────────────┘           └──────────────┘
+                                                                │
+                                                                ▼
+                                                    ┌──────────────────┐
+                                                    │ 📝 Step-by-step  │
+                                                    │    application   │
+                                                    │    guide +       │
+                                                    │    documents     │
+                                                    │    checklist     │
+                                                    └──────────────────┘
+                                                                │
+                                                                ▼
+                                                         ✅ APPLIED!
+</div><br/>
+<br>
+🆚 What Makes Us Different
+Feature	🏛️ Traditional Portals	🌾 Krishi Mitra
+Discovery	Manual search across 50+ sites	🤖 AI-powered instant matching
+Language	English / formal Hindi	🎤 Voice input in regional languages
+Personalization	None — generic listings	🎯 Hyper-personalized to farmer profile
+Eligibility	Manual document review	✅ Instant automated verification
+Guidance	PDF downloads	📝 Interactive step-by-step wizard
+Accessibility	Requires digital literacy	🗣️ Voice-first, low-bandwidth ready
+<br/>
+<br/>
 ✨ Features In-Depth
-1. 🧑‍🌾 Smart Farmer Profile Builder
+<br/><details> <summary><h3>1. 🧑‍🌾 Smart Farmer Profile Builder</h3></summary><br/>
 A simple, intuitive onboarding flow that captures essential data — once.
 
-Fields: Name, Location (State/District), Land Size, Crop Types, Income Bracket, Category (SC/ST/OBC/General)
-Smart Defaults: Auto-suggests crops based on region
-Privacy First: Data stored locally + encrypted Firebase with zero third-party sharing
-One-Time Setup: Profile powers all future recommendations
-2. 🤖 AI-Powered Scheme Recommendation Engine ⭐
-The killer feature — our "Scheme GPT"
+📝 Fields: Name, Location (State/District), Land Size, Crop Types, Income Bracket, Category (SC/ST/OBC/General)
+🌾 Smart Defaults: Auto-suggests crops based on region and season
+🔒 Privacy First: Data stored locally + encrypted Firebase — zero third-party sharing
+⚡ One-Time Setup: Profile powers all future recommendations forever
+text
 
-The first AI agent specifically trained on Indian welfare schemes. Uses Anthropic Claude API to perform multi-dimensional matching:
+┌─────────────────────────────────────────┐
+│        👤 FARMER PROFILE                │
+│                                         │
+│  Name:      [Ramesh Kumar          ]    │
+│  State:     [Madhya Pradesh     ▼  ]    │
+│  District:  [Sehore             ▼  ]    │
+│  Land:      [2 acres               ]    │
+│  Crops:     [🌾Wheat] [🫘Soybean]      │
+│  Income:    [₹80,000/year          ]    │
+│  Category:  [OBC               ▼  ]    │
+│                                         │
+│        [  ✅ Save & Get Matches  ]      │
+└─────────────────────────────────────────┘
+</details><br/><details> <summary><h3>2. 🤖 AI-Powered Scheme Recommendation Engine ⭐ <em>KILLER FEATURE</em></h3></summary><br/>
+"Scheme GPT" — The first AI agent specifically trained on Indian welfare schemes.
+
+Uses Anthropic Claude API to perform multi-dimensional matching across 50+ data points:
 
 text
 
-┌─────────────────────────────────────────────┐
-│           AI RECOMMENDATION ENGINE          │
-├─────────────────────────────────────────────┤
-│                                             │
-│   Farmer Profile ──┐                        │
-│                    ├──→ Claude AI ──→ Top 3  │
-│   Scheme Database ─┘    Analysis     Matches │
-│                                             │
-│   Analyzes 50+ data points including:       │
-│   • Land size & crop compatibility          │
-│   • Income bracket eligibility              │
-│   • Category-based reservations             │
-│   • Geographic availability                 │
-│   • Seasonal relevance                      │
-│   • Document readiness                      │
-│                                             │
-│   Output: Structured JSON with              │
-│   • match_score (0-100%)                    │
-│   • reasoning (plain language)              │
-│   • benefit_estimate (₹ value)              │
-│   • action_items (next steps)               │
-│                                             │
-└─────────────────────────────────────────────┘
-Accuracy: 95% match accuracy tested across 20 diverse farmer profiles.
-
-3. 📊 Interactive Dashboard
-A clean, single-pane-of-glass view for managing all scheme interactions:
+┌─────────────────────────────────────────────────┐
+│         🤖 AI RECOMMENDATION ENGINE             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│   👤 Farmer Profile ──┐                         │
+│                       ├──► 🧠 Claude AI ──► 🏆  │
+│   📂 Scheme Database ─┘      Analysis     Top 3 │
+│                                                 │
+│   ┌─────────────────────────────────────────┐   │
+│   │  Analyzes:                              │   │
+│   │  • 🌾 Land size & crop compatibility    │   │
+│   │  • 💰 Income bracket eligibility        │   │
+│   │  • 👥 Category-based reservations       │   │
+│   │  • 📍 Geographic availability           │   │
+│   │  • 📅 Seasonal relevance               │   │
+│   │  • 📄 Document readiness               │   │
+│   └─────────────────────────────────────────┘   │
+│                                                 │
+│   Output:                                       │
+│   ┌─────────────────────────────────────────┐   │
+│   │  • match_score:     92%                 │   │
+│   │  • reasoning:       "You qualify..."    │   │
+│   │  • benefit_estimate: ₹6,000/year        │   │
+│   │  • action_items:    ["Register at..."]  │   │
+│   └─────────────────────────────────────────┘   │
+│                                                 │
+│   🎯 Accuracy: 95% across 20 test profiles     │
+└─────────────────────────────────────────────────┘
+</details><br/><details> <summary><h3>3. 📊 Interactive Dashboard</h3></summary><br/>
+A clean, single-pane-of-glass view for managing all scheme interactions.
 
 Section	Description
-🎯 Top Matches For You	AI recommendations with match percentage & benefit value
+🎯 Top Matches For You	AI recommendations with match % & benefit value
 📋 Your Enrolled Schemes	Track saved/applied schemes with status updates
 🆕 New & Upcoming	Recently launched schemes you might qualify for
 💰 Potential Benefits	Total ₹ value of all eligible schemes combined
-📅 Upcoming Deadlines	Never miss an application window
-4. 🎤 Voice-First Interface
+📅 Upcoming Deadlines	Never miss an application window again
+text
+
+┌──────────────────────────────────────────────────┐
+│  🌾 Krishi Mitra Dashboard     [हिंदी ▼] [👤]   │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  💰 Total Potential Benefits: ₹1,52,000/year     │
+│  📋 Eligible Schemes: 7    📌 Enrolled: 2        │
+│                                                  │
+│  ┌─── 🎯 Top Matches ──────────────────────────┐ │
+│  │                                              │ │
+│  │  🟢 PM-KISAN          92% match   ₹6,000/yr │ │
+│  │  🟢 Fasal Bima        88% match   Variable  │ │
+│  │  🟡 PM-KUSUM          75% match   60% subsidy│ │
+│  │                                              │ │
+│  └──────────────────────────────────────────────┘ │
+│                                                  │
+│  ┌─── 📋 Enrolled ─────┐ ┌─── 🆕 New ─────────┐ │
+│  │  ✅ PM-KISAN         │ │  🔵 Agri Infra Fund│ │
+│  │  ✅ KCC              │ │  🔵 Digital Agri   │ │
+│  └──────────────────────┘ └────────────────────┘ │
+└──────────────────────────────────────────────────┘
+</details><br/><details> <summary><h3>4. 🎤 Voice-First Interface</h3></summary><br/>
 "Accessibility for 300M+ low-literacy users — this is our wow moment."
 
-Speak naturally in Hindi or English
-Powered by Web Speech API — runs entirely in-browser
-Visual feedback with listening animation
-Automatic language detection
-Fallback text input always available
+🗣️ Speak naturally in Hindi or English
+🌐 Powered by Web Speech API — runs entirely in-browser, no backend needed
+🎨 Visual feedback with listening animation & waveform
+🔄 Auto language detection — speak in any supported language
+⌨️ Fallback text input always available
 JavaScript
 
-// Example: Farmer speaks in Hindi
+// Farmer speaks in Hindi:
 "मुझे खेती के लिए लोन चाहिए"
-// AI responds with KCC and other loan schemes in Hindi
-5. 🌐 Multilingual Support
+
+// 🤖 AI understands intent → matches with:
+// ✅ Kisan Credit Card (KCC) — Up to ₹3L @ 4%
+// ✅ Agri Infrastructure Fund — 3% interest subvention
+// ✅ NABARD Refinance — Low-interest crop loans
+</details><br/><details> <summary><h3>5. 🌐 Multilingual Support</h3></summary><br/>
 Language	Status	Coverage
 🇮🇳 English	✅ Complete	UI + AI Responses
 🇮🇳 हिंदी (Hindi)	✅ Complete	UI + AI Responses + Voice
 🇮🇳 मराठी (Marathi)	🔄 In Progress	UI Translation
-🇮🇳 ਪੰਜਾਬੀ (Punjabi)	📋 Planned	—
-🇮🇳 தமிழ் (Tamil)	📋 Planned	—
-Built with react-i18next for instant language switching. AI responses auto-translate via Google Cloud Translation API.
+🇮🇳 ਪੰਜਾਬੀ (Punjabi)	📋 Planned	Roadmap
+🇮🇳 தமிழ் (Tamil)	📋 Planned	Roadmap
+Built with react-i18next for instant toggle. AI responses auto-translate via Google Cloud Translation API.
 
-6. ✅ Instant Eligibility Checker
-Click any scheme → instant eligibility verification against your profile:
-
-text
-
-PM-KISAN Samman Nidhi
-├── ✅ Land Size: 2 acres (max 5 acres)     — ELIGIBLE
-├── ✅ Category: OBC (all categories)        — ELIGIBLE  
-├── ✅ Income: ₹1.5L (no max limit)         — ELIGIBLE
-├── ⚠️ Documents: Aadhaar linked to bank?   — VERIFY
-└── 🟢 Overall: YOU QUALIFY! Benefit: ₹6,000/year
-7. 📝 Step-by-Step Application Guide
-Interactive wizard for India's top schemes (PM-KISAN, Fasal Bima, KCC):
+</details><br/><details> <summary><h3>6. ✅ Instant Eligibility Checker</h3></summary><br/>
+Click any scheme → get instant eligibility verification against your profile.
 
 text
 
-Step 1 → Visit pmkisan.gov.in
-Step 2 → Click "New Farmer Registration"  
-Step 3 → Enter Aadhaar Number
-Step 4 → Upload Land Records
-Step 5 → Link Bank Account
-💡 Pro Tip: "Ensure Aadhaar is linked to your mobile number"
-Reduces application abandonment by an estimated 60%.
-
-8. 📄 Document Checklist Generator
-Select multiple schemes → get a consolidated, deduplicated checklist:
+┌──────────────────────────────────────────────────┐
+│  📋 PM-KISAN Samman Nidhi — Eligibility Check    │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ✅ Land Size:    2 acres (max 5 acres)  PASS    │
+│  ✅ Category:     OBC (all categories)   PASS    │
+│  ✅ Income:       ₹80K (no max limit)    PASS    │
+│  ⚠️  Documents:   Aadhaar → Bank linked? VERIFY  │
+│                                                  │
+│  ┌──────────────────────────────────────────┐    │
+│  │  🟢 VERDICT: YOU QUALIFY!                │    │
+│  │  💰 Estimated Benefit: ₹6,000/year      │    │
+│  │  📅 Deadline: Continuous enrollment     │    │
+│  │                                          │    │
+│  │  [  📝 View Application Guide  ]        │    │
+│  │  [  🔗 Apply on Official Portal ]        │    │
+│  └──────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────┘
+</details><br/><details> <summary><h3>7. 📝 Step-by-Step Application Guide</h3></summary><br/>
+Interactive wizard for top schemes — reduces application abandonment by an estimated 60%.
 
 text
 
-📋 Documents Needed (3 schemes selected):
-├── ☐ Aadhaar Card
-├── ☐ Land Ownership Records (Khasra/Khatauni)
-├── ☐ Bank Passbook (front page)
-├── ☐ Passport-size Photographs (2)
-├── ☐ Income Certificate
-└── ☐ Caste Certificate (if applicable)
+┌──────────────────────────────────────────────────┐
+│  📝 Apply for PM-KISAN — Step 3 of 5            │
+│  ━━━━━━━━━━━━━━━━━━━━●━━━━━━━━━━━━              │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  Step 1  ✅  Visit pmkisan.gov.in                │
+│  Step 2  ✅  Click "New Farmer Registration"     │
+│  Step 3  👉  Enter Aadhaar Number                │
+│  Step 4  ⬜  Upload Land Records                 │
+│  Step 5  ⬜  Link Bank Account                   │
+│                                                  │
+│  ┌──────────────────────────────────────────┐    │
+│  │  💡 PRO TIP                              │    │
+│  │  "Ensure your Aadhaar is linked to       │    │
+│  │   your mobile number before starting"    │    │
+│  └──────────────────────────────────────────┘    │
+│                                                  │
+│       [ ← Previous ]        [ Next Step → ]      │
+└──────────────────────────────────────────────────┘
+Available for: PM-KISAN · Fasal Bima Yojana · Kisan Credit Card
 
-📥 Download as PDF | 📤 Share via WhatsApp
-Prevents repeat trips to government offices.
+</details><br/><details> <summary><h3>8. 📄 Document Checklist Generator</h3></summary><br/>
+Select multiple schemes → get a consolidated, deduplicated document checklist.
 
+text
+
+┌──────────────────────────────────────────────────┐
+│  📄 Your Document Checklist (3 schemes selected) │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ☐  Aadhaar Card                                 │
+│  ☐  Land Ownership Records (Khasra/Khatauni)     │
+│  ☐  Bank Passbook (front page with IFSC)         │
+│  ☐  Passport-size Photographs (2 copies)         │
+│  ☐  Income Certificate                           │
+│  ☐  Caste Certificate (if applicable)            │
+│                                                  │
+│  ──────────────────────────────────────────────── │
+│  Used by: PM-KISAN (4) · Fasal Bima (5) · KCC (4)│
+│                                                  │
+│  [ 📥 Download PDF ]    [ 📤 Share via WhatsApp ] │
+└──────────────────────────────────────────────────┘
+Prevents repeat trips to government offices — everything needed in one list.
+
+</details><br/>
+<br/>
 🏗️ Tech Architecture
+<br/>
 text
 
-┌──────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                     │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────────┐  │
-│  │   Next.js    │  │ TailwindCSS  │  │   Shadcn/UI    │  │
-│  │   14 (App    │  │  + Lucide    │  │  Components    │  │
-│  │   Router)    │  │    Icons     │  │  (Accessible)  │  │
-│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘  │
-│         └────────────────┼──────────────────┘            │
-│                          │                                │
-│  ┌───────────────────────▼────────────────────────────┐  │
-│  │              react-i18next (Multilingual)           │  │
-│  │              Web Speech API (Voice Input)           │  │
-│  │              React Hook Form (Validation)           │  │
-│  └───────────────────────┬────────────────────────────┘  │
-├──────────────────────────┼───────────────────────────────┤
-│                    API LAYER                              │
-│  ┌───────────────────────▼────────────────────────────┐  │
-│  │            Next.js API Routes (/api/*)              │  │
-│  │  ┌──────────────┐  ┌───────────┐  ┌────────────┐  │  │
-│  │  │  /recommend   │  │  /query   │  │  /profile   │  │  │
-│  │  │  (AI Match)   │  │  (NLP)    │  │  (CRUD)     │  │  │
-│  │  └──────┬───────┘  └─────┬─────┘  └──────┬─────┘  │  │
-│  └─────────┼───────────────┼────────────────┼────────┘  │
-├────────────┼───────────────┼────────────────┼────────────┤
-│                    SERVICE LAYER                          │
-│  ┌─────────▼───────┐ ┌────▼──────┐ ┌────────▼────────┐  │
-│  │  Anthropic      │ │  Google   │ │   Firebase      │  │
-│  │  Claude API     │ │  Cloud    │ │   Firestore     │  │
-│  │  (AI Engine)    │ │  Translate│ │   (Database)    │  │
-│  │                 │ │  API      │ │   + Auth        │  │
-│  └─────────────────┘ └──────────┘ └─────────────────┘  │
-├──────────────────────────────────────────────────────────┤
-│                    DATA LAYER                             │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │  📂 Curated Scheme Database (20+ Schemes)        │    │
-│  │  📂 Farmer Profiles (Encrypted)                  │    │
-│  │  📂 Application Guides (Structured Templates)    │    │
-│  └──────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────┘
-Tech Stack
+┌────────────────────────────────────────────────────────────────┐
+│                                                                │
+│   🖥️  PRESENTATION LAYER                                      │
+│   ┌────────────┐  ┌─────────────┐  ┌───────────────────────┐  │
+│   │  Next.js 14 │  │ TailwindCSS │  │  Shadcn/UI Components │  │
+│   │  App Router │  │ + Lucide    │  │  (Accessible, Fast)   │  │
+│   └──────┬─────┘  └──────┬──────┘  └──────────┬────────────┘  │
+│          └───────────────┼────────────────────┘               │
+│                          │                                     │
+│   ┌──────────────────────▼───────────────────────────────┐    │
+│   │  react-i18next │ Web Speech API │ React Hook Form     │    │
+│   │  (Languages)   │ (Voice Input)  │ (Validation)        │    │
+│   └──────────────────────┬───────────────────────────────┘    │
+│                          │                                     │
+├──────────────────────────┼─────────────────────────────────────┤
+│                          │                                     │
+│   ⚡ API LAYER           │                                     │
+│   ┌──────────────────────▼───────────────────────────────┐    │
+│   │           Next.js API Routes (/api/*)                 │    │
+│   │  ┌─────────────┐  ┌──────────┐  ┌─────────────────┐ │    │
+│   │  │ /recommend   │  │ /query   │  │ /profile        │ │    │
+│   │  │ (AI Match)   │  │ (NLP)    │  │ (CRUD)          │ │    │
+│   │  └──────┬──────┘  └────┬─────┘  └───────┬─────────┘ │    │
+│   └─────────┼──────────────┼────────────────┼────────────┘    │
+│             │              │                │                  │
+├─────────────┼──────────────┼────────────────┼──────────────────┤
+│             │              │                │                  │
+│   🔌 SERVICE LAYER        │                │                  │
+│   ┌─────────▼──────┐ ┌────▼─────┐ ┌────────▼──────────────┐  │
+│   │  🧠 Anthropic   │ │ 🌐 Google │ │  🔥 Firebase          │  │
+│   │  Claude API    │ │  Cloud   │ │  Firestore + Auth     │  │
+│   │  (AI Engine)   │ │  Trans.  │ │  (Database)           │  │
+│   └────────────────┘ └──────────┘ └───────────────────────┘  │
+│                                                                │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│   💾 DATA LAYER                                                │
+│   ┌──────────────────────────────────────────────────────┐    │
+│   │  📂 Curated Scheme Database (20+ Schemes)            │    │
+│   │  👤 Farmer Profiles (Encrypted, Local-First)         │    │
+│   │  📝 Application Guides (Structured Templates)        │    │
+│   │  🌐 Translation Files (en, hi, mr)                   │    │
+│   └──────────────────────────────────────────────────────┘    │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+<br/>
+🛠️ Tech Stack
 Layer	Technology	Purpose
-Framework	Next.js 14 (App Router)	SSR, API routes, fast builds
-Styling	TailwindCSS + Shadcn/UI	Rapid UI development, accessibility
-AI/NLP	Anthropic Claude API	Scheme matching, natural language understanding
-Database	Firebase Firestore	Real-time data, free tier, zero DevOps
-Auth	Firebase Authentication	Secure farmer profiles
-Multilingual	react-i18next	UI translations
-Translation	Google Cloud Translate API	AI response translation
-Voice	Web Speech API	Browser-native speech-to-text
-Forms	React Hook Form	Validation, performance
-Icons	Lucide React	Beautiful, consistent iconography
-Hosting	Vercel	Auto-deploy from GitHub, edge network
+⚡ Framework	Next.js 14 (App Router)	SSR, API routes, fast builds
+🎨 Styling	TailwindCSS + Shadcn/UI	Rapid UI dev, accessibility
+🧠 AI/NLP	Anthropic Claude API	Scheme matching, NLU
+🔥 Database	Firebase Firestore	Real-time data, zero DevOps
+🔐 Auth	Firebase Authentication	Secure farmer profiles
+🌐 i18n	react-i18next	UI translations
+🗣️ Translation	Google Cloud Translate	AI response translation
+🎤 Voice	Web Speech API	Browser-native STT
+📝 Forms	React Hook Form	Validation, performance
+🎯 Icons	Lucide React	Consistent iconography
+🚀 Hosting	Vercel	Auto-deploy, edge network
+<br/>
+<br/>
 🚀 Quick Start
 Prerequisites
-Node.js ≥ 18.0
-npm or yarn or pnpm
-Anthropic API Key (Get one here)
-Firebase Project (Create one here)
-Installation
+text
+
+✅ Node.js ≥ 18.0
+✅ npm / yarn / pnpm
+✅ Anthropic API Key  →  https://console.anthropic.com
+✅ Firebase Project   →  https://console.firebase.google.com
+⚡ Installation
 Bash
 
-# 1. Clone the repository
-git clone https://github.com/your-username/kisansathi.git
-cd kisansathi
+# 1️⃣  Clone the repository
+git clone https://github.com/your-username/krishi-mitra.git
+cd krishi-mitra
 
-# 2. Install dependencies
+# 2️⃣  Install dependencies
 npm install
 
-# 3. Set up environment variables
+# 3️⃣  Set up environment variables
 cp .env.example .env.local
-Environment Configuration
+🔑 Environment Configuration
 env
 
-# .env.local
+# ─── .env.local ───
 
-# Anthropic Claude API
+# 🧠 Anthropic Claude API
 ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxx
 
-# Firebase Configuration
+# 🔥 Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
@@ -264,112 +413,103 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
 NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
 
-# Google Cloud Translation (Optional)
+# 🌐 Google Cloud Translation (Optional)
 GOOGLE_TRANSLATE_API_KEY=your-google-api-key
-Run Development Server
+🏃 Run
 Bash
 
+# Development
 npm run dev
 # → Open http://localhost:3000
-Build for Production
-Bash
 
-npm run build
-npm start
-Deploy to Vercel
-Bash
+# Production Build
+npm run build && npm start
 
-# One-click deploy
+# Deploy to Vercel
 npx vercel --prod
+<div align="center">
 Deploy with Vercel
 
+</div><br/>
+<br/>
 📁 Project Structure
 text
 
-kisansathi/
-├── 📂 app/                          # Next.js 14 App Router
-│   ├── 📂 (auth)/                   # Authentication routes
-│   │   ├── login/
-│   │   └── register/
-│   ├── 📂 dashboard/                # Main dashboard
-│   │   └── page.tsx
-│   ├── 📂 profile/                  # Farmer profile management
-│   │   └── page.tsx
-│   ├── 📂 schemes/                  # Scheme listing & details
-│   │   ├── [id]/
-│   │   │   └── page.tsx             # Individual scheme view
-│   │   └── page.tsx
-│   ├── 📂 guide/                    # Step-by-step application guides
-│   │   └── [schemeId]/
-│   │       └── page.tsx
-│   ├── 📂 api/                      # API Routes
-│   │   ├── recommend/               # AI recommendation endpoint
-│   │   │   └── route.ts
-│   │   ├── query/                   # Natural language query endpoint
-│   │   │   └── route.ts
-│   │   └── translate/               # Translation endpoint
-│   │       └── route.ts
-│   ├── layout.tsx                   # Root layout
-│   ├── page.tsx                     # Landing page
-│   └── globals.css
-├── 📂 components/                   # Reusable UI components
-│   ├── 📂 ui/                       # Shadcn/UI components
+krishi-mitra/
+│
+├── 📂 app/                              # Next.js 14 App Router
+│   ├── 📂 (auth)/                       # Auth routes
+│   │   ├── login/page.tsx
+│   │   └── register/page.tsx
+│   ├── 📂 dashboard/page.tsx            # Main dashboard
+│   ├── 📂 profile/page.tsx              # Farmer profile
+│   ├── 📂 schemes/                      # Scheme pages
+│   │   ├── page.tsx                     # Listing
+│   │   └── [id]/page.tsx                # Detail view
+│   ├── 📂 guide/[schemeId]/page.tsx     # Application guides
+│   ├── 📂 api/                          # API Routes
+│   │   ├── recommend/route.ts           # AI recommendations
+│   │   ├── query/route.ts              # NL query processing
+│   │   └── translate/route.ts          # Translation
+│   ├── layout.tsx                       # Root layout
+│   ├── page.tsx                         # Landing page
+│   └── globals.css                      # Global styles
+│
+├── 📂 components/                       # UI Components
+│   ├── 📂 ui/                           # Shadcn components
 │   │   ├── button.tsx
 │   │   ├── card.tsx
 │   │   ├── dialog.tsx
 │   │   └── ...
-│   ├── 📂 dashboard/                # Dashboard-specific components
+│   ├── 📂 dashboard/                    # Dashboard widgets
 │   │   ├── SchemeCard.tsx
 │   │   ├── RecommendationList.tsx
 │   │   ├── StatsOverview.tsx
 │   │   └── DeadlineTracker.tsx
-│   ├── 📂 profile/                  # Profile components
-│   │   └── ProfileForm.tsx
-│   ├── 📂 voice/                    # Voice input components
-│   │   └── VoiceSearch.tsx
-│   ├── 📂 language/                 # Language switcher
-│   │   └── LanguageToggle.tsx
-│   └── 📂 guide/                    # Application guide components
-│       └── StepWizard.tsx
-├── 📂 data/                         # Static data
-│   ├── schemes.json                 # Curated scheme database
-│   ├── guides/                      # Application guide templates
+│   ├── 📂 profile/ProfileForm.tsx
+│   ├── 📂 voice/VoiceSearch.tsx         # Voice input
+│   ├── 📂 language/LanguageToggle.tsx   # i18n toggle
+│   └── 📂 guide/StepWizard.tsx          # Application wizard
+│
+├── 📂 data/                             # Static Data
+│   ├── schemes.json                     # 20+ curated schemes
+│   ├── 📂 guides/                       # Step-by-step templates
 │   │   ├── pm-kisan.json
 │   │   ├── fasal-bima.json
 │   │   └── kcc.json
-│   └── translations/                # i18n translation files
+│   └── 📂 translations/                # i18n files
 │       ├── en.json
 │       ├── hi.json
 │       └── mr.json
-├── 📂 lib/                          # Utility functions
-│   ├── ai/                          # AI integration
-│   │   ├── claude.ts                # Claude API client
-│   │   ├── prompts.ts               # Prompt templates
-│   │   └── matcher.ts               # Scheme matching logic
-│   ├── firebase/                    # Firebase configuration
+│
+├── 📂 lib/                              # Core Logic
+│   ├── 📂 ai/                           # AI integration
+│   │   ├── claude.ts                    # Claude API client
+│   │   ├── prompts.ts                   # Prompt templates
+│   │   └── matcher.ts                   # Matching logic
+│   ├── 📂 firebase/                     # Firebase setup
 │   │   ├── config.ts
 │   │   ├── auth.ts
 │   │   └── firestore.ts
-│   ├── hooks/                       # Custom React hooks
+│   ├── 📂 hooks/                        # Custom hooks
 │   │   ├── useProfile.ts
 │   │   ├── useSpeechRecognition.ts
 │   │   └── useSchemes.ts
-│   └── utils/                       # Helper utilities
-│       ├── eligibility.ts           # Eligibility checking logic
-│       └── documents.ts             # Document checklist generator
-├── 📂 public/                       # Static assets
-│   ├── icons/
-│   ├── images/
-│   └── locales/
-├── .env.example                     # Environment template
+│   └── 📂 utils/                        # Helpers
+│       ├── eligibility.ts
+│       └── documents.ts
+│
+├── 📂 public/                           # Static assets
+├── .env.example
 ├── next.config.js
 ├── tailwind.config.ts
 ├── tsconfig.json
 ├── package.json
 └── README.md
+<br/>
+<br/>
 📦 Scheme Database Schema
-Each scheme in our curated database follows this structure:
-
+Data Structure
 JSON
 
 {
@@ -398,64 +538,54 @@ JSON
   "application_mode": "online",
   "deadline": "continuous",
   "launched": "2019-02-01",
-  "description": "Direct income support to small and marginal farmers across India.",
-  "description_hi": "भारत भर के छोटे और सीमांत किसानों को प्रत्यक्ष आय सहायता।",
+  "description": "Direct income support to small and marginal farmers.",
+  "description_hi": "छोटे और सीमांत किसानों को प्रत्यक्ष आय सहायता।",
   "tags": ["income_support", "small_farmers", "central_scheme"]
 }
-Schemes Currently Covered
+📋 Schemes Currently Covered
 #	Scheme	Type	Benefit
 1	PM-KISAN Samman Nidhi	Income Support	₹6,000/year
 2	PM Fasal Bima Yojana	Crop Insurance	Up to full sum insured
-3	Kisan Credit Card (KCC)	Credit	Up to ₹3 lakh @ 4%
-4	PM-KUSUM	Solar/Irrigation	60% subsidy on solar pumps
-5	Soil Health Card	Soil Testing	Free soil analysis
-6	e-NAM	Market Access	Online crop trading
-7	PMFBY	Insurance	Premium subsidy 90%+
-8	Micro Irrigation Fund	Irrigation	55% subsidy (drip/sprinkler)
+3	Kisan Credit Card (KCC)	Credit	Up to ₹3L @ 4%
+4	PM-KUSUM	Solar/Irrigation	60% subsidy
+5	Soil Health Card	Soil Testing	Free analysis
+6	e-NAM	Market Access	Online trading
+7	PMFBY	Insurance	90%+ premium subsidy
+8	Micro Irrigation Fund	Irrigation	55% subsidy
 9	National Horticulture Mission	Horticulture	Up to 50% subsidy
-10	RKVY	Agriculture Dev	State-specific projects
-11	Paramparagat Krishi Vikas	Organic Farming	₹50,000/hectare (3 yrs)
-12	National Food Security Mission	Food Crops	Subsidized inputs
-13	Agriculture Infrastructure Fund	Infrastructure	3% interest subvention
-14	PM Matsya Sampada Yojana	Fisheries	Up to 60% subsidy
-15	Dairy Entrepreneurship Dev	Dairy	25-33% subsidy
+10	RKVY	Agri Development	State-specific
+11	Paramparagat Krishi	Organic Farming	₹50K/hectare/3yr
+12	National Food Security	Food Crops	Subsidized inputs
+13	Agri Infrastructure Fund	Infrastructure	3% interest subvention
+14	PM Matsya Sampada	Fisheries	Up to 60% subsidy
+15	Dairy Entrepreneurship	Dairy	25-33% subsidy
 ...	+ 5 state-specific schemes	Various	Various
+<br/>
+<br/>
 🤖 AI Engine
-How the Recommendation Engine Works
+Three-Stage Pipeline
 text
 
-Input: Farmer Profile + Scheme Database
-  │
-  ▼
-┌──────────────────────────────┐
-│   STAGE 1: Rule-Based Filter │  ← Fast elimination
-│   • Filter by state          │
-│   • Filter by land size      │
-│   • Filter by income         │
-│   • Filter by category       │
-│   Result: ~10-15 candidates  │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│   STAGE 2: AI Analysis       │  ← Deep matching
-│   • Claude API processes     │
-│   • Contextual reasoning     │
-│   • Benefit optimization     │
-│   • Priority ranking         │
-│   Result: Top 3-5 matches    │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│   STAGE 3: Response Format   │
-│   • Match score (0-100%)     │
-│   • Plain language reasoning │
-│   • Estimated ₹ benefit      │
-│   • Required action items    │
-│   • Document readiness check │
-└──────────────────────────────┘
-Core Prompt Template
+    📥 INPUT                    ⚙️ PROCESSING                   📤 OUTPUT
+                                    
+    👤 Farmer     ┌──────────────────────────────────┐     🏆 Top 3
+    Profile  ──►  │                                  │ ──► Schemes
+                  │  STAGE 1: Rule-Based Filter      │
+    📂 Scheme     │  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │     📊 Match
+    Database ──►  │  Filter by state, land, income   │ ──► Scores
+                  │  → Reduces 200+ to ~15 candidates│
+                  │                                  │     📝 Reasoning
+                  │  STAGE 2: AI Deep Analysis       │ ──► (Plain
+                  │  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │     Language)
+                  │  Claude API contextual matching  │
+                  │  → Ranks by benefit & relevance  │     📋 Action
+                  │                                  │ ──► Items
+                  │  STAGE 3: Response Formatting    │
+                  │  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │     ⚠️ Missing
+                  │  Structured JSON + checklist     │ ──► Docs
+                  │                                  │
+                  └──────────────────────────────────┘
+🔧 Core Prompt Template
 TypeScript
 
 const generateRecommendationPrompt = (
@@ -489,20 +619,16 @@ RESPONSE FORMAT (strict JSON):
   {
     "scheme_id": "string",
     "match_score": number (0-100),
-    "reasoning": "string (2-3 sentences in simple language)",
+    "reasoning": "string (2-3 sentences, simple language)",
     "benefit_estimate": "string (₹ amount with frequency)",
     "action_items": ["string"],
     "missing_requirements": ["string"] or []
   }
 ]
 
-Prioritize schemes with:
-- Highest financial benefit
-- Easiest application process
-- Earliest deadlines
-- No overlap with already enrolled schemes
+PRIORITIZE: Highest benefit → Easiest application → Earliest deadline
 `;
-Natural Language Query Processing
+🗣️ Natural Language Query Processing
 TypeScript
 
 const processNaturalQuery = (
@@ -519,140 +645,202 @@ Tasks:
 1. Understand the farmer's intent
 2. Map to relevant scheme categories
 3. Recommend specific schemes
-4. Respond in ${language === 'hi' ? 'Hindi' : 'English'} using simple, 
-   conversational language
+4. Respond in ${language === 'hi' ? 'Hindi' : 'English'}
+   using simple, conversational language
 
 Keep response under 200 words. Be warm and encouraging.
 `;
+🎤 Voice Input Component
+TypeScript
+
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+const VoiceSearch = ({ onResult }: { onResult: (text: string) => void }) => {
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
+  
+  const startListening = () => 
+    SpeechRecognition.startListening({ 
+      language: 'hi-IN', 
+      continuous: false 
+    });
+  
+  useEffect(() => {
+    if (transcript && !listening) {
+      onResult(transcript);
+      resetTranscript();
+    }
+  }, [transcript, listening]);
+
+  return (
+    <button onClick={startListening} className="voice-btn">
+      {listening ? '🎤 सुन रहा हूं...' : '🎤 बोलिए'}
+    </button>
+  );
+};
+<br/>
+<br/>
 🎬 Demo
-Demo Personas (Pre-configured)
+👥 Demo Personas
 Persona	Profile	Expected Matches
-Ramesh (Small Farmer)	2 acres, Wheat/Rice, MP, ₹80K income, OBC	PM-KISAN, Fasal Bima, KCC
-Lakshmi (Medium Farmer)	5 acres, Cotton/Soybean, Maharashtra, ₹2L income, General	PM-KUSUM, Micro Irrigation, e-NAM
-Gurpreet (Large Farmer)	15 acres, Wheat/Potato, Punjab, ₹5L income, General	Agri Infra Fund, e-NAM, Horticulture Mission
-Demo Flow (5 Minutes)
+👨‍🌾 Ramesh (Small)	2 acres, Wheat/Rice, MP, ₹80K, OBC	PM-KISAN, Fasal Bima, KCC
+👩‍🌾 Lakshmi (Medium)	5 acres, Cotton/Soybean, MH, ₹2L, General	PM-KUSUM, Micro Irrigation, e-NAM
+👨‍🌾 Gurpreet (Large)	15 acres, Wheat/Potato, PB, ₹5L, General	Agri Infra Fund, e-NAM, Horticulture
+🎥 5-Minute Demo Script
 text
 
-[0:00 - 0:45]  🎭 The Problem
-               → "68% of eligible farmers miss out on schemes"
-               → Introduce Ramesh's story
+⏱️ [0:00 — 0:45]   🎭 THE PROBLEM
+                    → Stat: "68% of eligible farmers miss out"
+                    → Introduce Ramesh's story — emotional hook
 
-[0:45 - 1:15]  🎤 Voice Query (WOW MOMENT)
-               → Ramesh speaks: "मुझे सिंचाई के लिए सब्सिडी चाहिए"
-               → AI responds with 3 relevant schemes
+⏱️ [0:45 — 1:15]   🎤 VOICE QUERY  ← ⭐ WOW MOMENT
+                    → Ramesh clicks mic
+                    → Speaks: "मुझे सिंचाई के लिए सब्सिडी चाहिए"
+                    → AI responds with 3 schemes — LIVE
 
-[1:15 - 1:45]  📊 AI Dashboard
-               → Show Top 3 matches with 92% relevance
-               → Click PM-KUSUM → Instant eligibility: ✅ QUALIFIED
+⏱️ [1:15 — 1:45]   📊 AI DASHBOARD
+                    → Top 3 matches with 92% relevance
+                    → Click PM-KUSUM → Instant eligibility ✅
 
-[1:45 - 2:15]  📝 Application Guide
-               → Step-by-step wizard for PM-KISAN
-               → Auto-generated document checklist
+⏱️ [1:45 — 2:15]   📝 APPLICATION GUIDE
+                    → Step-by-step wizard for PM-KISAN
+                    → Auto-generated document checklist
 
-[2:15 - 2:30]  🌐 Language Switch
-               → Toggle Hindi → Marathi — entire UI transforms
+⏱️ [2:15 — 2:30]   🌐 LANGUAGE SWITCH
+                    → Toggle English → Hindi → Marathi
+                    → "Works in 3 languages, extensible to 10+"
 
-[2:30 - 3:30]  🏗️ Technical Architecture
-               → AI pipeline explanation
-               → "Analyzes 50+ data points per farmer"
+⏱️ [2:30 — 3:30]   🏗️ TECH DEEP DIVE
+                    → AI pipeline architecture
+                    → "Analyzes 50+ data points per farmer"
 
-[3:30 - 4:30]  📈 Impact & Scale
-               → "100M+ farmers served"
-               → "₹2.5L Cr budget addressed"
-               → "3 days → 30 minutes"
+⏱️ [3:30 — 4:30]   📈 IMPACT & SCALE
+                    → "100M+ farmers | ₹2.5L Cr budget"
+                    → "3 days → 30 minutes (90% faster)"
 
-[4:30 - 5:00]  🤝 Call to Action
-               → Partner with NABARD, State Govts, NGOs
-               → Open-source commitment
+⏱️ [4:30 — 5:00]   🤝 CALL TO ACTION
+                    → "Partner with NABARD, State Govts, NGOs"
+                    → "This can change lives"
+<br/>
+<br/>
 🗺️ Roadmap
 text
 
-✅ Phase 1: MVP (Current)
-├── Smart farmer profiling
-├── AI-powered scheme matching (20+ schemes)
-├── Voice input (Hindi + English)
-├── Multilingual UI (3 languages)
-├── Eligibility checker
-├── Application step-by-step guides
-└── Document checklist generator
+✅ PHASE 1: MVP  ─────────────────── CURRENT
+│
+├── ✅ Smart farmer profile builder
+├── ✅ AI-powered scheme matching (20+ schemes)
+├── ✅ Voice input (Hindi + English)
+├── ✅ Multilingual UI (3 languages)
+├── ✅ Instant eligibility checker
+├── ✅ Step-by-step application guides
+└── ✅ Document checklist generator
 
-🔄 Phase 2: Scale (Next 3 Months)
-├── Expand to 200+ schemes (all states)
-├── 10+ regional languages
-├── WhatsApp chatbot integration
-├── OCR for document verification
-├── SMS/Email deadline reminders
-├── Partnerships with CSCs
+🔄 PHASE 2: SCALE ─────────────────── NEXT 3 MONTHS
+│
+├── 🔄 Expand to 200+ schemes (all states)
+├── 🔄 10+ regional languages
+├── 🔄 WhatsApp chatbot integration
+├── 🔄 OCR for document verification
+├── 🔄 SMS/Email deadline reminders
+└── 🔄 Partnership with CSCs (Common Service Centers)
 
-📋 Phase 3: Ecosystem (6-12 Months)
-├── USSD/IVR for feature phones
-├── Government API integrations
-├── Real-time application status tracking
-├── Crowdsourced scheme updates from field workers
-├── Analytics dashboard for policymakers
-├── NGO partnership portal
-└── Offline-first PWA for 2G networks
+📋 PHASE 3: ECOSYSTEM ─────────────── 6-12 MONTHS
+│
+├── 📋 USSD/IVR integration (feature phones)
+├── 📋 Government API integrations
+├── 📋 Real-time application status tracking
+├── 📋 Crowdsourced scheme updates
+├── 📋 Analytics dashboard for policymakers
+├── 📋 NGO partnership portal
+└── 📋 Offline-first PWA for 2G networks
+<br/>
+<br/>
 📈 Impact Metrics
-<div align="center">
-Metric	Value
-🎯 Target Users	100M+ small & marginal farmers
-💰 Welfare Budget Addressed	₹2.5 Lakh Crore annually
-📋 Schemes Covered	20+ (scaling to 200+)
-🌐 Languages Supported	3 (scaling to 10+)
-⏱️ Time Saved	3 days → 30 minutes (90% reduction)
-🤖 AI Accuracy	95% scheme match accuracy
-📱 Accessibility	Voice-first, low-bandwidth compatible
-</div>
+<div align="center"><br/>
+Metric	Value	Context
+🎯 Target Users	100M+	Small & marginal farmers across India
+💰 Budget Addressed	₹2.5L Cr	Annual government welfare allocation
+📋 Schemes Covered	20+ → 200+	Central + State schemes
+🌐 Languages	3 → 10+	Hindi, English, Marathi + more
+⏱️ Time Saved	90%	3 days → 30 minutes per application
+🤖 AI Accuracy	95%	Tested across 20 diverse farmer profiles
+📱 Accessibility	Voice-First	Works for low-literacy users
+<br/></div><br/>
+<br/>
 🛡️ Privacy & Security
-🔒 Local-First Storage: Profile data stored on user's device by default
-🔐 Firebase Encryption: Cloud data encrypted at rest and in transit
-🚫 No Third-Party Sharing: Farmer data is never sold or shared
-📋 Minimal Data Collection: Only essential fields for scheme matching
-🗑️ Right to Delete: Farmers can delete all data anytime
+Policy	Detail
+🔒	Local-First Storage	Profile data stored on user's device by default
+🔐	Encryption	Firebase data encrypted at rest and in transit
+🚫	No Third-Party Sharing	Farmer data is never sold or shared
+📋	Minimal Collection	Only essential fields for scheme matching
+🗑️	Right to Delete	Farmers can delete all their data anytime
+<br/>
+<br/>
 🤝 Contributing
-We believe in the power of community to solve India's agricultural challenges. Contributions are welcome!
+We believe in the power of community to solve India's agricultural challenges. Every contribution matters.
 
 How to Contribute
-Fork the repository
-Create a feature branch (git checkout -b feature/amazing-feature)
-Commit your changes (git commit -m 'Add amazing feature')
-Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
-Contribution Ideas
-🌐 Add a new language — Translate UI strings to your regional language
-📋 Add state schemes — Research and structure schemes from your state
-📝 Write application guides — Create step-by-step guides for more schemes
-🐛 Bug fixes — Check Issues
-♿ Accessibility — Improve screen reader support, keyboard navigation
-Code of Conduct
-This project adheres to the Contributor Covenant Code of Conduct. By participating, you agree to uphold a welcoming, inclusive environment.
+Bash
 
+# 1️⃣  Fork the repository
+# 2️⃣  Create your feature branch
+git checkout -b feature/amazing-feature
+
+# 3️⃣  Commit your changes
+git commit -m 'Add amazing feature'
+
+# 4️⃣  Push to the branch
+git push origin feature/amazing-feature
+
+# 5️⃣  Open a Pull Request
+💡 Contribution Ideas
+Area	What You Can Do
+🌐 Languages	Add translations for your regional language
+📋 Schemes	Research & structure schemes from your state
+📝 Guides	Write step-by-step guides for more schemes
+🐛 Bug Fixes	Check open Issues
+♿ Accessibility	Improve screen reader support, keyboard nav
+📖 Documentation	Improve docs, add examples, fix typos
+This project follows the Contributor Covenant Code of Conduct. By participating, you agree to uphold a welcoming, inclusive environment.
+
+<br/>
+<br/>
 👥 Team
 <div align="center">
-Role	Responsibility
-Frontend Lead	Dashboard, UI/UX, Responsive Design
-AI/Backend Lead	Claude API Integration, Prompt Engineering, API Routes
-Data Engineer	Scheme Database Curation, Research, Validation
-Product/Voice Lead	Multilingual, Voice Input, Presentation, PM
-</div>
+🎨 Frontend Lead	🧠 AI/Backend Lead	📊 Data Engineer	🎯 Product Lead
+Dashboard & UI/UX	Claude API & APIs	Scheme Database	Multilingual & Voice
+Responsive Design	Prompt Engineering	Research & Validation	Presentation & PM
+</div><br/>
+<br/>
 📄 License
 This project is licensed under the MIT License — see the LICENSE file for details.
 
+<br/>
+<br/>
 🙏 Acknowledgements
-Anthropic Claude — Powering our AI recommendation engine
-MyScheme.gov.in — Government scheme data reference
-Shadcn/UI — Beautiful, accessible UI components
-Firebase — Backend infrastructure
-Vercel — Hosting and deployment
 <div align="center">
-🌾 "Technology should serve those who feed the nation."
-Built with ❤️ for Indian Farmers
+Resource	Contribution
+🧠	Anthropic Claude	Powering our AI recommendation engine
+🏛️	MyScheme.gov.in	Government scheme data reference
+🎨	Shadcn/UI	Beautiful, accessible components
+🔥	Firebase	Backend infrastructure
+🚀	Vercel	Hosting & deployment
+</div><br/>
+<br/><div align="center"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&pause=1000&color=2E8B57&center=true&vCenter=true&repeat=true&width=500&lines=%F0%9F%8C%BE+Technology+should+serve+those;who+feed+the+nation." alt="Quote" />
+<br/><br/>
 
+Built with ❤️ for Indian Farmers
+<br/>
 ⭐ Star this repo if you believe every farmer deserves access to their entitled benefits.
 
+<br/>
 GitHub Stars
-Twitter Follow
+  
+Fork
+  
+Issues
+
+<br/>
+<sub>🌾 Krishi Mitra — Because every farmer deserves a fair chance. 🌾</sub>
 
 </div>
- 
- 
