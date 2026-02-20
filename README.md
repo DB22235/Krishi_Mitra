@@ -381,11 +381,7 @@ Layer	Technology	Purpose
 Prerequisites
 text
 
-✅ Node.js ≥ 18.0
-✅ npm / yarn / pnpm
-✅ Anthropic API Key  →  https://console.anthropic.com
-✅ Firebase Project   →  https://console.firebase.google.com
-⚡ Installation
+
 Bash
 
 # 1️⃣  Clone the repository
@@ -395,118 +391,10 @@ cd krishi-mitra
 # 2️⃣  Install dependencies
 npm install
 
-# 3️⃣  Set up environment variables
-cp .env.example .env.local
-🔑 Environment Configuration
-env
-
-# ─── .env.local ───
-
-# 🧠 Anthropic Claude API
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxx
-
-# 🔥 Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
-
-# 🌐 Google Cloud Translation (Optional)
-GOOGLE_TRANSLATE_API_KEY=your-google-api-key
-🏃 Run
-Bash
-
-# Development
-npm run dev
-# → Open http://localhost:3000
-
-# Production Build
-npm run build && npm start
-
-# Deploy to Vercel
-npx vercel --prod
-<div align="center">
-Deploy with Vercel
-
 </div><br/>
 <br/>
-📁 Project Structure
-text
 
-krishi-mitra/
-│
-├── 📂 app/                              # Next.js 14 App Router
-│   ├── 📂 (auth)/                       # Auth routes
-│   │   ├── login/page.tsx
-│   │   └── register/page.tsx
-│   ├── 📂 dashboard/page.tsx            # Main dashboard
-│   ├── 📂 profile/page.tsx              # Farmer profile
-│   ├── 📂 schemes/                      # Scheme pages
-│   │   ├── page.tsx                     # Listing
-│   │   └── [id]/page.tsx                # Detail view
-│   ├── 📂 guide/[schemeId]/page.tsx     # Application guides
-│   ├── 📂 api/                          # API Routes
-│   │   ├── recommend/route.ts           # AI recommendations
-│   │   ├── query/route.ts              # NL query processing
-│   │   └── translate/route.ts          # Translation
-│   ├── layout.tsx                       # Root layout
-│   ├── page.tsx                         # Landing page
-│   └── globals.css                      # Global styles
-│
-├── 📂 components/                       # UI Components
-│   ├── 📂 ui/                           # Shadcn components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dialog.tsx
-│   │   └── ...
-│   ├── 📂 dashboard/                    # Dashboard widgets
-│   │   ├── SchemeCard.tsx
-│   │   ├── RecommendationList.tsx
-│   │   ├── StatsOverview.tsx
-│   │   └── DeadlineTracker.tsx
-│   ├── 📂 profile/ProfileForm.tsx
-│   ├── 📂 voice/VoiceSearch.tsx         # Voice input
-│   ├── 📂 language/LanguageToggle.tsx   # i18n toggle
-│   └── 📂 guide/StepWizard.tsx          # Application wizard
-│
-├── 📂 data/                             # Static Data
-│   ├── schemes.json                     # 20+ curated schemes
-│   ├── 📂 guides/                       # Step-by-step templates
-│   │   ├── pm-kisan.json
-│   │   ├── fasal-bima.json
-│   │   └── kcc.json
-│   └── 📂 translations/                # i18n files
-│       ├── en.json
-│       ├── hi.json
-│       └── mr.json
-│
-├── 📂 lib/                              # Core Logic
-│   ├── 📂 ai/                           # AI integration
-│   │   ├── claude.ts                    # Claude API client
-│   │   ├── prompts.ts                   # Prompt templates
-│   │   └── matcher.ts                   # Matching logic
-│   ├── 📂 firebase/                     # Firebase setup
-│   │   ├── config.ts
-│   │   ├── auth.ts
-│   │   └── firestore.ts
-│   ├── 📂 hooks/                        # Custom hooks
-│   │   ├── useProfile.ts
-│   │   ├── useSpeechRecognition.ts
-│   │   └── useSchemes.ts
-│   └── 📂 utils/                        # Helpers
-│       ├── eligibility.ts
-│       └── documents.ts
-│
-├── 📂 public/                           # Static assets
-├── .env.example
-├── next.config.js
-├── tailwind.config.ts
-├── tsconfig.json
-├── package.json
-└── README.md
-<br/>
+
 <br/>
 📦 Scheme Database Schema
 Data Structure
@@ -776,8 +664,7 @@ Policy	Detail
 🗑️	Right to Delete	Farmers can delete all their data anytime
 <br/>
 <br/>
-🤝 Contributing
-We believe in the power of community to solve India's agricultural challenges. Every contribution matters.
+
 
 How to Contribute
 Bash
@@ -817,14 +704,7 @@ This project is licensed under the MIT License — see the LICENSE file for deta
 
 <br/>
 <br/>
-🙏 Acknowledgements
-<div align="center">
-Resource	Contribution
-🧠	Anthropic Claude	Powering our AI recommendation engine
-🏛️	MyScheme.gov.in	Government scheme data reference
-🎨	Shadcn/UI	Beautiful, accessible components
-🔥	Firebase	Backend infrastructure
-🚀	Vercel	Hosting & deployment
+
 </div><br/>
 <br/><div align="center"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&pause=1000&color=2E8B57&center=true&vCenter=true&repeat=true&width=500&lines=%F0%9F%8C%BE+Technology+should+serve+those;who+feed+the+nation." alt="Quote" />
 <br/><br/>
@@ -844,4 +724,5 @@ Issues
 <sub>🌾 Krishi Mitra — Because every farmer deserves a fair chance. 🌾</sub>
 
 </div>
+
 
