@@ -1,5 +1,8 @@
 🌾 Krishi Mitra — AI-Powered Government Scheme Discovery for Farmers
-<br/><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&pause=1000&color=2E8B57&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=80&lines=%F0%9F%8C%BE+Empowering+100M%2B+Indian+Farmers;%F0%9F%A4%96+AI+that+speaks+your+language;%F0%9F%87%AE%F0%9F%87%B3+Every+scheme.+Every+farmer.+Every+language." alt="Typing SVG" /><br/> <br/><img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake-dark.svg" width="600" alt="snake animation"/>
+<br/><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&pause=1000&color=2E8B57&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=80&lines=%F0%9F%8C%BE+Empowering+100M%2B+Indian+Farmers;%F0%9F%A4%96+AI+that+speaks+your+language;%F0%9F%87%AE%F0%9F%87%B3+Every+scheme.+Every+farmer.+Every+language." alt="Typing SVG" /><br/>
+
+<br/><br/>
+<br/><img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake-dark.svg" width="600" alt="snake animation"/>
 <br/><br/>
 
 <!-- Badges Row 1 -->
@@ -724,6 +727,7 @@ Issues
 <sub>🌾 Krishi Mitra — Because every farmer deserves a fair chance. 🌾</sub>
 
 </div>
+
 
 
 
