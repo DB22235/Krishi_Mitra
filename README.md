@@ -17,7 +17,7 @@ TailwindCSS
 
 
 
-<br/><!-- Impact Stats --><img src="https://img.shields.io/badge/🎯_Farmers_Served-100M+-brightgreen?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/📋_Schemes-200+-blue?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/🤖_AI_Accuracy-95%25-success?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/⏱️_Time_Saved-90%25-red?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/💰_Budget-₹2.5L_Cr-gold?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/🌐_Languages-3+-purple?style=flat-square" />
+<br/><!-- Impact Stats --><img src="https://img.shields.io/badge/🎯_Farmers_Served-100M+-brightgreen?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/📋_Schemes-200+-blue?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/🤖_AI_Accuracy-95%25-success?style=flat-square" /> &nbsp; <img src="https://img.shields.io/badge/⏱️_Time_Saved-90%25-red?style=flat-square" /> &nbsp;  <img src="https://img.shields.io/badge/🌐_Languages-3+-purple?style=flat-square" />
 <br/><br/>
 
 <br/>
@@ -724,5 +724,6 @@ Issues
 <sub>🌾 Krishi Mitra — Because every farmer deserves a fair chance. 🌾</sub>
 
 </div>
+
 
 
