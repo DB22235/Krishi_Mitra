@@ -8,7 +8,7 @@ import { Dashboard } from "./screens/Dashboard";
 
 import  Chat  from "./screens/Chat";
 
-import  Chat from "./screens/Chat";
+
 
 import { SchemeDiscovery } from "./screens/SchemeDiscovery";
 import { SchemeDetail } from "./screens/SchemeDetail";
