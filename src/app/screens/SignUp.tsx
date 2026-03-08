@@ -128,7 +128,34 @@ export function SignUp() {
       }
 
       if (result.error) {
-        setErrors({ general: result.error.message || t('Sign up failed. Please try again.') });
+        // Handle specific error cases with user-friendly messages
+        let errorMessage = result.error.message || t('Sign up failed. Please try again.');
+        const errorLower = errorMessage.toLowerCase();
+        
+        if (errorLower.includes('rate limit') || 
+            errorLower.includes('too many requests') ||
+            errorLower.includes('email rate limit') ||
+            (result.error as { status?: number }).status === 429) {
+          errorMessage = language === 'hi' 
+            ? 'बहुत अधिक प्रयास। कृपया 5 मिनट बाद पुनः प्रयास करें।'
+            : 'Too many attempts. Please wait 5 minutes and try again.';
+        } else if (errorLower.includes('already registered') ||
+                   errorLower.includes('already exists') ||
+                   errorLower.includes('user already')) {
+          errorMessage = language === 'hi'
+            ? 'यह ईमेल/फ़ोन पहले से पंजीकृत है। कृपया लॉगिन करें।'
+            : 'This email/phone is already registered. Please login instead.';
+        } else if (errorLower.includes('invalid email')) {
+          errorMessage = language === 'hi'
+            ? 'कृपया एक मान्य ईमेल पता दर्ज करें।'
+            : 'Please enter a valid email address.';
+        } else if (errorLower.includes('password')) {
+          errorMessage = language === 'hi'
+            ? 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।'
+            : 'Password must be at least 6 characters.';
+        }
+        
+        setErrors({ general: errorMessage });
       } else {
         // Success - navigate to onboarding
         navigate('/onboarding/profile');
