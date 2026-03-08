@@ -46,7 +46,11 @@ export function Splash() {
 
 
   const handleContinue = () => {
-    navigate('/onboarding/profile');
+    navigate('/signup');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
   };
 
 
@@ -142,15 +146,26 @@ export function Splash() {
       </div>
 
 
-      {/* Continue button */}
-      <motion.button
-        onClick={handleContinue}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="w-full max-w-md bg-[#F5A623] text-[#1C1C1E] py-4 rounded-xl font-bold text-[16px] hover:bg-[#E09515] transition-colors shadow-lg shadow-[#F5A623]/20"
-      >
-        {t('Continue')}
-      </motion.button>
+      {/* Action buttons */}
+      <div className="w-full max-w-md space-y-3">
+        <motion.button
+          onClick={handleContinue}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full bg-[#F5A623] text-[#1C1C1E] py-4 rounded-xl font-bold text-[16px] hover:bg-[#E09515] transition-colors shadow-lg shadow-[#F5A623]/20"
+        >
+          {t('Sign Up')}
+        </motion.button>
+        
+        <motion.button
+          onClick={handleLogin}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full bg-transparent border-2 border-[#F5A623] text-[#F5A623] py-4 rounded-xl font-bold text-[16px] hover:bg-[#F5A623]/10 transition-colors"
+        >
+          {t('Log In')}
+        </motion.button>
+      </div>
     </div>
   );
 }

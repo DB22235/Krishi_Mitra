@@ -14,13 +14,16 @@
 import { Outlet } from 'react-router';
 import { LanguageProvider } from '../../context/LanguageContext';
 import { UserProvider } from '../../context/UserContext';
+import { AuthProvider } from '../../context/AuthContext';
 
 export function RootLayout() {
   return (
     <LanguageProvider>
-      <UserProvider>
-        <Outlet />
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <Outlet />
+        </UserProvider>
+      </AuthProvider>
     </LanguageProvider>
   );
 }
