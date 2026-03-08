@@ -1,7 +1,16 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase, getUserProfile } from '../lib/supabase';
+import type { User, Session } from '@supabase/supabase-js';
+
+// Lazy import supabase to avoid initialization errors
+let supabaseModule: typeof import('../lib/supabase') | null = null;
+
+const getSupabase = async () => {
+  if (!supabaseModule) {
+    supabaseModule = await import('../lib/supabase');
+  }
+  return supabaseModule;
+};
 
 interface Profile {
   id: string;
@@ -37,9 +46,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Fetch user profile from database
   const fetchProfile = async (userId: string) => {
-    const { data, error } = await getUserProfile(userId);
-    if (!error && data) {
-      setProfile(data as Profile);
+    try {
+      const { getUserProfile } = await getSupabase();
+      const { data, error } = await getUserProfile(userId);
+      if (!error && data) {
+        setProfile(data as Profile);
+      }
+    } catch (err) {
+      console.log('[v0] Error fetching profile:', err);
     }
   };
 
@@ -52,41 +66,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Sign out
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      const { supabase } = await getSupabase();
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.log('[v0] Error signing out:', err);
+    }
     setUser(null);
     setSession(null);
     setProfile(null);
   };
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
-      setSession(initialSession);
-      setUser(initialSession?.user ?? null);
-      
-      if (initialSession?.user) {
-        fetchProfile(initialSession.user.id);
-      }
-      
-      setIsLoading(false);
-    });
+    let subscription: { unsubscribe: () => void } | null = null;
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-
-        if (event === 'SIGNED_IN' && newSession?.user) {
-          await fetchProfile(newSession.user.id);
-        } else if (event === 'SIGNED_OUT') {
-          setProfile(null);
+    const initAuth = async () => {
+      try {
+        const { supabase } = await getSupabase();
+        
+        // Get initial session
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
+        
+        if (initialSession?.user) {
+          await fetchProfile(initialSession.user.id);
         }
+
+        // Listen for auth changes
+        const { data } = supabase.auth.onAuthStateChange(
+          async (event, newSession) => {
+            setSession(newSession);
+            setUser(newSession?.user ?? null);
+
+            if (event === 'SIGNED_IN' && newSession?.user) {
+              await fetchProfile(newSession.user.id);
+            } else if (event === 'SIGNED_OUT') {
+              setProfile(null);
+            }
+          }
+        );
+        subscription = data.subscription;
+      } catch (err) {
+        console.log('[v0] Auth initialization error:', err);
+      } finally {
+        setIsLoading(false);
       }
-    );
+    };
+
+    initAuth();
 
     return () => {
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, []);
 

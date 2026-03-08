@@ -1,14 +1,32 @@
 // src/lib/supabase.ts
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+// Try multiple env var naming conventions - Vite injects these at build time
+const supabaseUrl = 
+  import.meta.env.VITE_SUPABASE_URL || 
+  '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials not configured. Auth features will not work.');
+const supabaseAnonKey = 
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 
+  '';
+
+// Create a singleton instance
+let supabaseInstance: SupabaseClient | null = null;
+
+function getSupabaseClient(): SupabaseClient {
+  if (!supabaseInstance) {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.warn('[v0] Supabase credentials not available. Auth features may not work.');
+    }
+    supabaseInstance = createClient(
+      supabaseUrl || 'https://placeholder.supabase.co', 
+      supabaseAnonKey || 'placeholder-key'
+    );
+  }
+  return supabaseInstance;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = getSupabaseClient();
 
 // Auth helper functions
 export async function signUpWithEmail(
