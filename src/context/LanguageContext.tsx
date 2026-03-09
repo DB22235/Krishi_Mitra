@@ -262,6 +262,22 @@ const translations: Record<LanguageCode, Record<string, string>> = {
     'Network error. Please check your connection.': 'Network error. Please check your connection.',
     'Voice input failed. Please type manually.': 'Voice input failed. Please type manually.',
     'Failed to start voice input. Please type manually.': 'Failed to start voice input. Please type manually.',
+
+    // Auth Screens
+    'Create Account': 'Create Account',
+    'Welcome Back': 'Welcome Back',
+    'Email Address': 'Email Address',
+    'Confirm Password': 'Confirm Password',
+    'Sign Up': 'Sign Up',
+    'Login': 'Login',
+    'Passwords don\'t match': 'Passwords don\'t match',
+    'Something went wrong. Please try again.': 'Something went wrong. Please try again.',
+    'Incorrect credentials. Please try again.': 'Incorrect credentials. Please try again.',
+    'Already have an account?': 'Already have an account?',
+    'Create new account': 'Create new account',
+    'Forgot Password?': 'Forgot Password?',
+    'By continuing you agree to our Terms of Service': 'By continuing you agree to our Terms of Service',
+    'User already exists': 'User already exists',
   },
 
   hi: {
@@ -312,6 +328,22 @@ const translations: Record<LanguageCode, Record<string, string>> = {
     'Network error. Please check your connection.': 'नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।',
     'Voice input failed. Please type manually.': 'वॉइस इनपुट विफल। कृपया मैन्युअल टाइप करें।',
     'Failed to start voice input. Please type manually.': 'वॉइस शुरू नहीं हो सका। कृपया मैन्युअल टाइप करें।',
+
+    // Auth Screens
+    'Create Account': 'नया खाता बनाएं',
+    'Welcome Back': 'वापस आपका स्वागत है',
+    'Email Address': 'ईमेल पता',
+    'Confirm Password': 'पासवर्ड दोबारा',
+    'Sign Up': 'खाता बनाएं',
+    'Login': 'लॉगिन करें',
+    'Passwords don\'t match': 'पासवर्ड मेल नहीं खाते',
+    'Something went wrong. Please try again.': 'कुछ गलत हुआ। दोबारा कोशिश करें।',
+    'Incorrect credentials. Please try again.': 'गलत जानकारी। दोबारा कोशिश करें।',
+    'Already have an account?': 'पहले से खाता है?',
+    'Create new account': 'नया खाता बनाएं',
+    'Forgot Password?': 'पासवर्ड भूल गए?',
+    'By continuing you agree to our Terms of Service': 'जारी रखकर आप हमारी शर्तों से सहमत हैं',
+    'User already exists': 'यह खाता पहले से मौजूद है',
 
 
     // Add to translations.en

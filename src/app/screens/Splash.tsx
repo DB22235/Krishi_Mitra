@@ -46,7 +46,12 @@ export function Splash() {
 
 
   const handleContinue = () => {
-    navigate('/onboarding/profile');
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/login');
+    } else {
+      navigate('/signup');
+    }
   };
 
 

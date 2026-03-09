@@ -2,6 +2,8 @@
 import { createBrowserRouter } from "react-router";
 import { RootLayout } from "./layouts/RootLayout";
 import { Splash } from "./screens/Splash";
+import { SignUp } from "./screens/SignUp";
+import { Login } from "./screens/Login";
 import { OnboardingProfile } from "./screens/OnboardingProfile";
 import { OnboardingFarmDetails } from "./screens/OnboardingFarmDetails";
 import { Dashboard } from "./screens/Dashboard";
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
       {
         path: "/",
         Component: Splash,
+      },
+      {
+        path: "/signup",
+        Component: SignUp,
+      },
+      {
+        path: "/login",
+        Component: Login,
       },
       {
         path: "/onboarding/profile",
