@@ -1,5 +1,19 @@
-node_modules
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
 
-
+# envs
 .env
-node_modules
+.env.* 
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
