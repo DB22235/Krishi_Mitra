@@ -13,12 +13,13 @@ import { useUser } from '../../context/UserContext';
 export function Profile() {
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-  const { userData, updateUserData, getProfileCompletion, getPendingTasks } = useUser();
+  const { userData, updateUserData, clearUserData, getProfileCompletion, getPendingTasks } = useUser();
   const isHindi = language === 'hi';
 
   const [expandedSection, setExpandedSection] = useState<string>('');
   const [showFinanceModal, setShowFinanceModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [animatedPercent, setAnimatedPercent] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
@@ -104,6 +105,12 @@ export function Profile() {
   const handleSaveFinance = () => {
     updateUserData(financeForm);
     setShowFinanceModal(false);
+  };
+
+  // Handle sign out
+  const handleSignOut = () => {
+    clearUserData();
+    navigate('/login');
   };
 
   // Get crop names
@@ -286,10 +293,10 @@ export function Profile() {
               initial={{ scale: 1.3 }}
               animate={{ scale: 1 }}
               className={`text-[22px] font-bold ${animatedPercent >= 80
-                  ? 'text-green-500'
-                  : animatedPercent >= 50
-                    ? 'text-[#F5A623]'
-                    : 'text-red-500'
+                ? 'text-green-500'
+                : animatedPercent >= 50
+                  ? 'text-[#F5A623]'
+                  : 'text-red-500'
                 }`}
             >
               {animatedPercent}%
@@ -303,10 +310,10 @@ export function Profile() {
               animate={{ width: `${animatedPercent}%` }}
               transition={{ duration: 1.5, ease: 'easeOut', delay: 0.5 }}
               className={`h-full rounded-full ${animatedPercent >= 80
-                  ? 'bg-green-500'
-                  : animatedPercent >= 50
-                    ? 'bg-[#F5A623]'
-                    : 'bg-red-500'
+                ? 'bg-green-500'
+                : animatedPercent >= 50
+                  ? 'bg-[#F5A623]'
+                  : 'bg-red-500'
                 }`}
             />
           </div>
@@ -552,8 +559,8 @@ export function Profile() {
                       <span className="text-[13px] text-[#6B7280]">{info.label}</span>
                       <span
                         className={`text-[13px] font-medium text-right max-w-[55%] ${info.value && info.value !== (isHindi ? 'जोड़ें' : 'Add')
-                            ? 'text-[#1C1C1E]'
-                            : 'text-[#F5A623]'
+                          ? 'text-[#1C1C1E]'
+                          : 'text-[#F5A623]'
                           }`}
                       >
                         {info.value || (isHindi ? '+ जोड़ें' : '+ Add')}
@@ -722,8 +729,8 @@ export function Profile() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
                         className={`rounded-2xl p-4 text-center border-2 transition-all ${doc.status === 'uploaded'
-                            ? 'bg-green-50 border-green-200'
-                            : 'bg-gray-50 border-dashed border-gray-200 hover:border-[#F5A623]'
+                          ? 'bg-green-50 border-green-200'
+                          : 'bg-gray-50 border-dashed border-gray-200 hover:border-[#F5A623]'
                           }`}
                       >
                         <div className="text-3xl mb-2">
@@ -788,6 +795,7 @@ export function Profile() {
           transition={{ delay: 0.55 }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
+          onClick={() => setShowSignOutModal(true)}
           className="w-full bg-white rounded-3xl shadow-sm border border-gray-100 px-5 py-4 flex items-center gap-3"
         >
           <div className="w-10 h-10 rounded-2xl bg-red-50 flex items-center justify-center">
@@ -884,8 +892,8 @@ export function Profile() {
                           setFinanceForm({ ...financeForm, incomeSource: src.en })
                         }
                         className={`px-4 py-2 rounded-full text-[12px] font-medium border-2 transition-all ${financeForm.incomeSource === src.en
-                            ? 'bg-[#F5A623] text-white border-[#F5A623]'
-                            : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
+                          ? 'bg-[#F5A623] text-white border-[#F5A623]'
+                          : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
                           }`}
                       >
                         {isHindi ? src.hi : src.en}
@@ -911,8 +919,8 @@ export function Profile() {
                           setFinanceForm({ ...financeForm, category: cat.en })
                         }
                         className={`flex-1 py-3 rounded-2xl text-[13px] font-semibold border-2 transition-all ${financeForm.category === cat.en
-                            ? 'bg-[#F5A623] text-white border-[#F5A623]'
-                            : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
+                          ? 'bg-[#F5A623] text-white border-[#F5A623]'
+                          : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
                           }`}
                       >
                         {isHindi ? cat.hi : cat.en}
@@ -991,8 +999,8 @@ export function Profile() {
                           setFinanceForm({ ...financeForm, pmKisanStatus: status.en })
                         }
                         className={`flex-1 py-2.5 rounded-2xl text-[12px] font-semibold border-2 transition-all ${financeForm.pmKisanStatus === status.en
-                            ? 'bg-[#F5A623] text-white border-[#F5A623]'
-                            : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
+                          ? 'bg-[#F5A623] text-white border-[#F5A623]'
+                          : 'bg-[#F7F3EE] text-[#6B7280] border-transparent'
                           }`}
                       >
                         {isHindi ? status.hi : status.en}
@@ -1053,14 +1061,121 @@ export function Profile() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className={`w-full py-4 rounded-2xl font-semibold text-[16px] transition-all border-2 flex items-center justify-center gap-2 ${language === lang.code
-                        ? 'bg-[#F5A623] text-white border-[#F5A623]'
-                        : 'bg-[#F7F3EE] text-[#1C1C1E] border-transparent'
+                      ? 'bg-[#F5A623] text-white border-[#F5A623]'
+                      : 'bg-[#F7F3EE] text-[#1C1C1E] border-transparent'
                       }`}
                   >
                     {lang.name}
                     {language === lang.code && <Check className="w-5 h-5" />}
                   </motion.button>
                 ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sign Out Confirmation Modal */}
+      <AnimatePresence>
+        {showSignOutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6"
+            onClick={() => setShowSignOutModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm bg-white rounded-3xl p-6"
+            >
+              {/* Icon */}
+              <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LogOut className="w-8 h-8 text-red-500" />
+              </div>
+
+              <h3 className="text-[18px] font-bold text-[#1C1C1E] text-center mb-2">
+                {isHindi ? 'साइन आउट करें?' : 'Sign Out?'}
+              </h3>
+              <p className="text-[13px] text-[#6B7280] text-center mb-6">
+                {isHindi
+                  ? 'क्या आप वाकई साइन आउट करना चाहते हैं?'
+                  : 'Are you sure you want to sign out?'}
+              </p>
+
+              <div className="flex gap-3">
+                <motion.button
+                  onClick={() => setShowSignOutModal(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 py-3.5 rounded-2xl font-semibold text-[14px] bg-[#F7F3EE] text-[#1C1C1E]"
+                >
+                  {isHindi ? 'रद्द करें' : 'Cancel'}
+                </motion.button>
+                <motion.button
+                  onClick={handleSignOut}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 py-3.5 rounded-2xl font-semibold text-[14px] bg-red-500 text-white shadow-lg shadow-red-500/30"
+                >
+                  {isHindi ? 'साइन आउट' : 'Sign Out'}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sign Out Confirmation Modal */}
+      <AnimatePresence>
+        {showSignOutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6"
+            onClick={() => setShowSignOutModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm bg-white rounded-3xl p-6"
+            >
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+                  <LogOut className="w-8 h-8 text-red-500" />
+                </div>
+              </div>
+              <h3 className="text-[18px] font-bold text-[#1C1C1E] text-center mb-1">
+                {isHindi ? 'साइन आउट करें?' : 'Sign Out?'}
+              </h3>
+              <p className="text-[13px] text-[#6B7280] text-center mb-6">
+                {isHindi
+                  ? 'क्या आप वाकई साइन आउट करना चाहते हैं?'
+                  : 'Are you sure you want to sign out?'}
+              </p>
+              <div className="flex gap-3">
+                <motion.button
+                  onClick={() => setShowSignOutModal(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 py-3 rounded-2xl font-semibold text-[14px] bg-[#F7F3EE] text-[#1C1C1E]"
+                >
+                  {isHindi ? 'रद्द करें' : 'Cancel'}
+                </motion.button>
+                <motion.button
+                  onClick={handleSignOut}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 py-3 rounded-2xl font-semibold text-[14px] bg-red-500 text-white"
+                >
+                  {isHindi ? 'साइन आउट' : 'Sign Out'}
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>

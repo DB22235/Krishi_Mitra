@@ -20,6 +20,7 @@ import {
   X,
   Check,
   Volume2,
+  VolumeX,
   MoreVertical,
   Trash2,
   Download,
@@ -29,6 +30,7 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { BottomNav } from '../components/BottomNav';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUser } from '../../context/UserContext';
 
 // ─── Interfaces ─────────────────────────────────────────────────
 interface Scheme {
@@ -94,6 +96,7 @@ const quickActions: QuickAction[] = [
 export default function Chat(): JSX.Element {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { userData } = useUser();
   const isHindi = language === 'hi';
 
   // State
@@ -102,9 +105,9 @@ export default function Chat(): JSX.Element {
       id: '1',
       type: 'bot',
       text:
-        "Hello Farmer! 👋\n\nI'm Krishi Mitra AI, your agricultural assistant.\n\nYou can ask me about:\n• Crop diseases & solutions\n• Weather-based farming tips\n• Government schemes\n• Soil health & fertilizers\n• Market prices",
+        `Hello ${userData.name || 'Farmer'}! 👋\n\nI'm Krishi Mitra AI, your agricultural assistant.\n\nYou can ask me about:\n• Crop diseases & solutions\n• Weather-based farming tips\n• Government schemes\n• Soil health & fertilizers\n• Market prices`,
       textHi:
-        'नमस्ते किसान भाई! 👋\n\nमैं कृषि मित्र AI हूँ, आपका कृषि सहायक।\n\nआप मुझसे पूछ सकते हैं:\n• फसल रोग और समाधान\n• मौसम आधारित खेती सुझाव\n• सरकारी योजनाएं\n• मृदा स्वास्थ्य और उर्वरक\n• बाज़ार भाव',
+        `नमस्ते ${userData.name || 'किसान भाई'}! 👋\n\nमैं कृषि मित्र AI हूँ, आपका कृषि सहायक।\n\nआप मुझसे पूछ सकते हैं:\n• फसल रोग और समाधान\n• मौसम आधारित खेती सुझाव\n• सरकारी योजनाएं\n• मृदा स्वास्थ्य और उर्वरक\n• बाज़ार भाव`,
       timestamp: new Date(),
     },
   ]);
@@ -115,7 +118,8 @@ export default function Chat(): JSX.Element {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
+  // TTS is OFF by default — user must press the sound icon to enable
+  const [ttsEnabled, setTtsEnabled] = useState(false);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -155,9 +159,18 @@ export default function Chat(): JSX.Element {
     return () => {
       try {
         window.speechSynthesis.onvoiceschanged = null;
-      } catch {}
+      } catch { }
     };
   }, []);
+
+  // Stop speaking when TTS is turned off
+  useEffect(() => {
+    if (!ttsEnabled && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch { }
+    }
+  }, [ttsEnabled]);
 
   // ─── Helpers: time formatting
   const formatTime = (date: Date) =>
@@ -175,7 +188,6 @@ export default function Chat(): JSX.Element {
   const pickVoiceForLang = (lang: string) => {
     const vs = speechVoicesRef.current;
     if (!vs || vs.length === 0) return null;
-    // try exact or prefix match
     const exact = vs.find((v) => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
     if (exact) return exact;
     const prefix = lang.split('-')[0];
@@ -190,7 +202,7 @@ export default function Chat(): JSX.Element {
 
     try {
       window.speechSynthesis.cancel();
-    } catch {}
+    } catch { }
 
     const utter = new SpeechSynthesisUtterance(text);
     const lang = detectLanguageFromText(text);
@@ -206,10 +218,7 @@ export default function Chat(): JSX.Element {
   useEffect(() => {
     const isSecure =
       window.location.hostname === 'localhost' || window.location.protocol === 'https:';
-    if (!isSecure) {
-      // do not initialize recognition if not secure; will show message to user on attempt
-      return;
-    }
+    if (!isSecure) return;
 
     const SpeechRecognition =
       (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
@@ -229,8 +238,6 @@ export default function Chat(): JSX.Element {
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setInputText(transcript);
-      // optional: auto-send after speech finished
-      // handleSend(transcript); // commented out to allow user to review; uncomment to auto-send
     };
 
     recognitionRef.current = recognition;
@@ -238,7 +245,7 @@ export default function Chat(): JSX.Element {
     return () => {
       try {
         recognition.stop();
-      } catch {}
+      } catch { }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHindi]);
@@ -256,16 +263,14 @@ export default function Chat(): JSX.Element {
         timestamp: new Date(),
       };
 
-      // Add user message immediately
       setMessages((prev) => [...prev, userMessage]);
       setInputText('');
       setIsLoading(true);
       setShowQuickActions(false);
 
-      // Abort previous request if still pending
       try {
         abortControllerRef.current?.abort();
-      } catch {}
+      } catch { }
       const ac = new AbortController();
       abortControllerRef.current = ac;
 
@@ -274,10 +279,16 @@ export default function Chat(): JSX.Element {
           {
             role: 'system',
             content: `You are Krishi Mitra AI, an agriculture assistant helping Indian farmers.
+User Info:
+- Name: ${userData.name || 'Unknown'}
+- Location: ${userData.district || 'Unknown'}, ${userData.state || 'Unknown'}
+- Land: ${userData.landSize} ${userData.landUnit} (${userData.landOwnership})
+- Crops: ${userData.selectedCrops.join(', ') || 'None specified'}
+- Irrigation: ${userData.irrigation.join(', ') || 'None specified'}
+
 Respond in ${isHindi ? 'Hindi' : 'English'} unless user uses another language.
 Keep answers practical, simple, and actionable. Use bullet points for lists.`,
           },
-          // include the conversation context (we include only the current array snapshot)
           ...messages.map((msg) => ({
             role: msg.type === 'user' ? 'user' : 'assistant',
             content: msg.text,
@@ -300,7 +311,6 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
         const data = await res.json();
         const botReply = data?.choices?.[0]?.message?.content ?? (isHindi ? 'माफ़ करें, उत्तर देने में समस्या आ रही है।' : 'Sorry, there was a problem responding.');
 
-        // optional scheme detection (simple heuristic)
         let schemes: Scheme[] | undefined = undefined;
         if (botReply.toLowerCase().includes('योजना') || botReply.toLowerCase().includes('scheme') || botReply.toLowerCase().includes('pm-kisan')) {
           schemes = [
@@ -333,13 +343,11 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
         };
 
         setMessages((prev) => [...prev, botMessage]);
-
-        // Speak response if TTS enabled
         setTimeout(() => speakText(botReply), 120);
       } catch (err: any) {
         console.error('chat error:', err);
         if (err.name === 'AbortError') {
-          // ignored - aborted by user
+          // ignored
         } else {
           const errMsg: Message = {
             id: `${Date.now()}_error`,
@@ -349,14 +357,12 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
             isError: true,
           };
           setMessages((prev) => [...prev, errMsg]);
-          // speak error optionally
           setTimeout(() => speakText(errMsg.text), 120);
         }
       } finally {
         setIsLoading(false);
       }
     },
-    // include dependencies: inputText, isLoading, messages, isHindi, setMessages
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [inputText, isLoading, messages, isHindi],
   );
@@ -403,7 +409,6 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
 
   // ─── Voice input handler (toggle)
   const handleVoiceInput = useCallback(() => {
-    // security check
     const isSecure =
       window.location.hostname === 'localhost' || window.location.protocol === 'https:';
     if (!isSecure) {
@@ -419,23 +424,14 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
     }
 
     if (!recognitionRef.current) {
-      // the useEffect should have created it, but create as fallback
       const recognition = new SpeechRecognition();
       recognition.lang = isHindi ? 'hi-IN' : 'en-IN';
       recognition.continuous = false;
       recognition.interimResults = false;
-
       recognition.onstart = () => setIsListening(true);
       recognition.onend = () => setIsListening(false);
-      recognition.onerror = (e: any) => {
-        console.error('Speech error (fallback):', e);
-        setIsListening(false);
-      };
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInputText(transcript);
-      };
-
+      recognition.onerror = (e: any) => { console.error('Speech error (fallback):', e); setIsListening(false); };
+      recognition.onresult = (event: any) => { setInputText(event.results[0][0].transcript); };
       recognitionRef.current = recognition;
     }
 
@@ -453,9 +449,18 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
     }
   }, [isHindi, isListening]);
 
-  // ─── Replay single bot message (TTS)
+  // ─── Replay single bot message (TTS) — forces speak even if TTS toggled off
   const replayMessage = (text: string) => {
-    speakText(text);
+    if (!('speechSynthesis' in window)) return;
+    try { window.speechSynthesis.cancel(); } catch { }
+    const utter = new SpeechSynthesisUtterance(text);
+    const lang = detectLanguageFromText(text);
+    const voice = pickVoiceForLang(lang);
+    utter.lang = lang;
+    if (voice) utter.voice = voice;
+    utter.rate = 1;
+    utter.pitch = 1;
+    window.speechSynthesis.speak(utter);
   };
 
   // ─── UI render
@@ -490,25 +495,47 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
             </div>
           </div>
 
-          <div className="relative">
-            <button onClick={() => setShowMenu(!showMenu)} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <MoreVertical className="w-5 h-5 text-white" />
-            </button>
+          {/* Right side: TTS toggle + menu */}
+          <div className="flex items-center gap-2">
+            {/* ── Sound Toggle Button ── */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setTtsEnabled((prev) => !prev)}
+              className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${ttsEnabled
+                  ? 'bg-[#F5A623] shadow-lg shadow-[#F5A623]/40'
+                  : 'bg-white/10 hover:bg-white/20'
+                }`}
+              title={ttsEnabled
+                ? (isHindi ? 'ध्वनि बंद करें' : 'Mute voice')
+                : (isHindi ? 'ध्वनि चालू करें' : 'Enable voice')}
+            >
+              {ttsEnabled
+                ? <Volume2 className="w-5 h-5 text-white" />
+                : <VolumeX className="w-5 h-5 text-white/70" />
+              }
+            </motion.button>
 
-            <AnimatePresence>
-              {showMenu && (
-                <motion.div initial={{ opacity: 0, scale: 0.9, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: -10 }} className="absolute right-0 top-11 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden w-48 z-30">
-                  <button onClick={handleClearChat} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-left">
-                    <Trash2 className="w-4 h-4 text-[#F87171]" />
-                    <span className="text-[13px] text-[#1C1C1E]">{isHindi ? 'चैट साफ़ करें' : 'Clear Chat'}</span>
-                  </button>
-                  <button onClick={() => { navigate('/dashboard'); setShowMenu(false); }} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-left border-t border-gray-50">
-                    <ArrowLeft className="w-4 h-4 text-[#6B7280]" />
-                    <span className="text-[13px] text-[#1C1C1E]">{isHindi ? 'होम जाएं' : 'Go to Home'}</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* ── Menu Button ── */}
+            <div className="relative">
+              <button onClick={() => setShowMenu(!showMenu)} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+                <MoreVertical className="w-5 h-5 text-white" />
+              </button>
+
+              <AnimatePresence>
+                {showMenu && (
+                  <motion.div initial={{ opacity: 0, scale: 0.9, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: -10 }} className="absolute right-0 top-11 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden w-48 z-30">
+                    <button onClick={handleClearChat} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-left">
+                      <Trash2 className="w-4 h-4 text-[#F87171]" />
+                      <span className="text-[13px] text-[#1C1C1E]">{isHindi ? 'चैट साफ़ करें' : 'Clear Chat'}</span>
+                    </button>
+                    <button onClick={() => { navigate('/dashboard'); setShowMenu(false); }} className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-left border-t border-gray-50">
+                      <ArrowLeft className="w-4 h-4 text-[#6B7280]" />
+                      <span className="text-[13px] text-[#1C1C1E]">{isHindi ? 'होम जाएं' : 'Go to Home'}</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>

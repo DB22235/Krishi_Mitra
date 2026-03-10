@@ -55,9 +55,18 @@ export interface DocumentInfo {
 interface UserContextType {
   userData: UserData;
   updateUserData: (data: Partial<UserData>) => void;
+  clearUserData: () => void;
   getProfileCompletion: () => number;
   getPendingTasks: () => { en: string; hi: string }[];
+  loadAccount: (mobile: string) => void;
 }
+
+const defaultDocuments = [
+  { id: 'aadhaar', name: 'Aadhaar Card', nameHi: 'आधार कार्ड', status: 'pending' as const, verified: false },
+  { id: 'land', name: 'Land Records', nameHi: 'भूमि रिकॉर्ड', status: 'pending' as const, verified: false },
+  { id: 'bank', name: 'Bank Passbook', nameHi: 'बैंक पासबुक', status: 'pending' as const, verified: false },
+  { id: 'photo', name: 'Passport Photo', nameHi: 'पासपोर्ट फोटो', status: 'pending' as const, verified: false },
+];
 
 const defaultUserData: UserData = {
   name: '',
@@ -78,12 +87,7 @@ const defaultUserData: UserData = {
   bankAccount: '',
   ifscCode: '',
   pmKisanStatus: '',
-  documents: [
-    { id: 'aadhaar', name: 'Aadhaar Card', nameHi: 'आधार कार्ड', status: 'pending', verified: false },
-    { id: 'land', name: 'Land Records', nameHi: 'भूमि रिकॉर्ड', status: 'pending', verified: false },
-    { id: 'bank', name: 'Bank Passbook', nameHi: 'बैंक पासबुक', status: 'pending', verified: false },
-    { id: 'photo', name: 'Passport Photo', nameHi: 'पासपोर्ट फोटो', status: 'pending', verified: false },
-  ],
+  documents: defaultDocuments,
   state: '',
   district: '',
   village: '',
@@ -94,34 +98,76 @@ const defaultUserData: UserData = {
   livestock: '',
 };
 
+// ─── Key helpers ────────────────────────────────────────────────────────────
+// Active session key — stores which account is currently logged in
+const SESSION_KEY = 'active-user-mobile';
+
+// Per-account data key
+const userDataKey = (mobile: string) => `user-data-${mobile}`;
+
+// Read the currently logged-in mobile from session
+const getActiveMobile = (): string => localStorage.getItem(SESSION_KEY) || '';
+
+// Load data for a specific mobile (or return defaults)
+const loadUserData = (mobile: string): UserData => {
+  if (!mobile) return defaultUserData;
+  const saved = localStorage.getItem(userDataKey(mobile));
+  return saved ? { ...defaultUserData, ...JSON.parse(saved) } : defaultUserData;
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<UserData>(() => {
-    const saved = localStorage.getItem('user-data');
-    return saved ? { ...defaultUserData, ...JSON.parse(saved) } : defaultUserData;
+    const mobile = getActiveMobile();
+    return loadUserData(mobile);
   });
 
+  // Whenever userData changes, persist it under the correct per-account key
   useEffect(() => {
-    localStorage.setItem('user-data', JSON.stringify(userData));
+    const mobile = userData.mobile || getActiveMobile();
+    if (mobile) {
+      localStorage.setItem(userDataKey(mobile), JSON.stringify(userData));
+      // Keep session key in sync in case mobile was just set
+      localStorage.setItem(SESSION_KEY, mobile);
+    }
   }, [userData]);
 
   const updateUserData = (data: Partial<UserData>) => {
     setUserData((prev) => ({ ...prev, ...data }));
   };
 
+  const clearUserData = () => {
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('token');
+    setUserData(defaultUserData);
+  };
+
+  const loadAccount = (mobile: string) => {
+    if (!mobile) return;
+    localStorage.setItem(SESSION_KEY, mobile);
+    const data = loadUserData(mobile);
+    setUserData(data);
+  };
+
+  // ── Call this from your Login page after successful login ──────────────────
+  // e.g.  loginUser(mobile)  →  loads that account's saved data into context
+  // You can expose this via context if needed, or call it directly in Login.tsx
+  // by doing: localStorage.setItem('active-user-mobile', mobile) before mount,
+  // then the UserProvider init above will automatically pick it up.
+  // ──────────────────────────────────────────────────────────────────────────
+
   const getProfileCompletion = (): number => {
     let total = 0;
     let filled = 0;
 
-    // Basic (30%)
     const basicFields = ['name', 'age', 'gender', 'mobile'] as const;
     basicFields.forEach((field) => {
       total += 7.5;
       if (userData[field]) filled += 7.5;
     });
 
-    // Farm (30%)
     total += 7.5;
     if (userData.landOwnership) filled += 7.5;
     total += 7.5;
@@ -131,17 +177,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     total += 7.5;
     if (userData.irrigation.length > 0) filled += 7.5;
 
-    // Financial (20%)
     const finFields = ['annualIncome', 'bankName', 'bankAccount', 'ifscCode'] as const;
     finFields.forEach((field) => {
       total += 5;
       if (userData[field]) filled += 5;
     });
 
-    // Documents (20%)
-    userData.documents.forEach(() => {
-      total += 5;
-    });
+    userData.documents.forEach(() => { total += 5; });
     userData.documents.forEach((doc) => {
       if (doc.status === 'uploaded') filled += 5;
     });
@@ -168,7 +210,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ userData, updateUserData, getProfileCompletion, getPendingTasks }}>
+    <UserContext.Provider value={{ userData, updateUserData, clearUserData, getProfileCompletion, getPendingTasks, loadAccount }}>
       {children}
     </UserContext.Provider>
   );

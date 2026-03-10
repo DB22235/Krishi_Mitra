@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUser } from '../../context/UserContext';
 import '../../styles/auth.css';
 
 export function Login() {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
+  const { loadAccount } = useUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,13 +38,21 @@ export function Login() {
       if (!res.ok) {
         setError(t('Incorrect credentials. Please try again.'));
         setLoading(false);
-        // Trigger shake
         setShaking(true);
         setTimeout(() => setShaking(false), 350);
         return;
       }
 
+      // Save auth token
       localStorage.setItem('token', data.token);
+
+      // Set active account key — used by UserContext to load the right profile
+      // Prefer mobile from response if available, otherwise fall back to email
+      const accountKey = data.mobile || data.user?.mobile || email.trim();
+      
+      // Update global context immediately so we don't need a page reload
+      loadAccount(accountKey);
+
       setLoading(false);
       setSuccess(true);
       setTimeout(() => navigate('/dashboard'), 600);
@@ -141,9 +151,9 @@ export function Login() {
                 tabIndex={-1}
               >
                 {showPassword ? (
-                  <svg width="20" height="20" fill="none" stroke="#6B7280" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  <svg width="20" height="20" fill="none" stroke="#6B7280" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
                 ) : (
-                  <svg width="20" height="20" fill="none" stroke="#6B7280" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg width="20" height="20" fill="none" stroke="#6B7280" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" /><circle cx="12" cy="12" r="3" /></svg>
                 )}
               </button>
             </div>

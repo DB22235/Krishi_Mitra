@@ -1,19 +1,39 @@
-# Node
+# Node.js artifacts
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
 
-# envs
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Environment variables (CRITICAL)
 .env
-.env.* 
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+*.env
 
-# VSCode
-.vscode/
-
-# OS
+# Operating System
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Logs
-logs/
-*.log
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific sensitive files
+server/.env
+server/config/*.key
+server/config/*.pem
+server/certs/

@@ -51,7 +51,7 @@ export function Dashboard() {
 
   // Get user's first name
   const getFirstName = () => {
-    if (!userData.name) return isHindi ? 'किसान' : 'Farmer';
+    if (!userData.name) return '';
     const firstName = userData.name.split(' ')[0];
     return firstName;
   };
@@ -68,7 +68,7 @@ export function Dashboard() {
   };
 
 
-  const schemes = [
+  const allSchemes = [
     {
       id: 'pm-kisan',
       name: 'PM-Kisan Samman Nidhi',
@@ -82,6 +82,9 @@ export function Dashboard() {
       eligible: true,
       logo: '🏛️',
       color: 'bg-green-500',
+      category: ['BPL', 'APL', 'General'],
+      state: 'All',
+      crops: 'All'
     },
     {
       id: 'pmfby',
@@ -96,6 +99,9 @@ export function Dashboard() {
       eligible: true,
       logo: '🌾',
       color: 'bg-blue-500',
+      category: ['BPL', 'APL', 'General'],
+      state: 'All',
+      crops: 'All'
     },
     {
       id: 'soil-health',
@@ -110,8 +116,26 @@ export function Dashboard() {
       eligible: true,
       logo: '🌱',
       color: 'bg-amber-500',
+      category: ['BPL', 'APL', 'General'],
+      state: 'All',
+      crops: 'All'
     },
   ];
+
+  // Logic to sort schemes based on user data
+  const schemes = [...allSchemes].sort((a, b) => {
+    // Check for category match
+    const aCatMatch = userData.category && a.category.includes(userData.category);
+    const bCatMatch = userData.category && b.category.includes(userData.category);
+    
+    // Check for state match
+    const aStateMatch = userData.state && (a.state === 'All' || a.state === userData.state);
+    const bStateMatch = userData.state && (b.state === 'All' || b.state === userData.state);
+
+    if ((aCatMatch || aStateMatch) && !(bCatMatch || bStateMatch)) return -1;
+    if (!(aCatMatch || aStateMatch) && (bCatMatch || bStateMatch)) return 1;
+    return 0;
+  });
 
 
   const quickActions = [
@@ -254,7 +278,8 @@ export function Dashboard() {
               <div>
                 <p className="text-[#97BC62] text-[13px] mb-0.5">{getGreeting()}</p>
                 <h2 className="text-white font-bold text-[20px]">
-                  {getFirstName()} {isHindi ? 'जी' : ''}! 👋
+                  {isHindi ? 'नमस्ते' : 'Welcome'}
+                  {getFirstName() ? `, ${getFirstName()}` : ''}! 👋
                 </h2>
               </div>
             </div>
@@ -572,7 +597,7 @@ export function Dashboard() {
 
       {/* Profile Completion Reminder (if less than 50%) */}
       <AnimatePresence>
-        {profileCompletion < 50 && (
+        {(profileCompletion < 50 || !userData.name) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
