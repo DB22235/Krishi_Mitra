@@ -22,6 +22,7 @@ export function SchemeDetail() {
   const { language } = useLanguage();
   const { userData } = useUser();
   const isHindi = language === 'hi';
+  const isMarathi = language === 'mr';
 
 
   const [expandedSection, setExpandedSection] = useState<string>('at-a-glance');
@@ -32,13 +33,26 @@ export function SchemeDetail() {
   };
 
 
+  // Helper to pick the right localized string
+  const localize = (en: string, hi: string, mr: string) => {
+    if (isMarathi) return mr;
+    if (isHindi) return hi;
+    return en;
+  };
+
+
   // For now hard-coded for PM-Kisan; you can later switch based on `id`
-  const schemeTitleEn = 'PM-Kisan Samman Nidhi';
-  const schemeTitleHi = 'प्रधानमंत्री किसान सम्मान निधि';
-  const schemeTypeEn = 'Central Govt • Direct Benefit';
-  const schemeTypeHi = 'केंद्र सरकार • प्रत्यक्ष लाभ';
-  const deadlineEn = 'March 31';
-  const deadlineHi = '31 मार्च';
+  const schemeTitle = localize(
+    'PM-Kisan Samman Nidhi',
+    'प्रधानमंत्री किसान सम्मान निधि',
+    'प्रधानमंत्री किसान सन्मान निधी'
+  );
+  const schemeType = localize(
+    'Central Govt • Direct Benefit',
+    'केंद्र सरकार • प्रत्यक्ष लाभ',
+    'केंद्र सरकार • थेट लाभ'
+  );
+  const deadline = localize('March 31', '31 मार्च', '31 मार्च');
 
 
   const eligibilityCriteria = [
@@ -46,26 +60,31 @@ export function SchemeDetail() {
       met: true,
       textEn: 'Small/Marginal Farmer — Land < 2 hectares',
       textHi: 'लघु/सीमांत किसान — भूमि 2 हेक्टेयर से कम',
+      textMr: 'अल्प/सीमांत शेतकरी — जमीन 2 हेक्टरपेक्षा कमी',
     },
     {
       met: true,
       textEn: 'Valid Aadhaar linked to bank',
       textHi: 'बैंक से लिंक आधार आवश्यक',
+      textMr: 'बँकेशी लिंक केलेले वैध आधार',
     },
     {
       met: true,
       textEn: 'Active bank account',
       textHi: 'सक्रिय बैंक खाता',
+      textMr: 'सक्रिय बँक खाते',
     },
     {
       met: 'warning' as const,
       textEn: 'Annual income below ₹1.5L — Update your profile to verify',
       textHi: 'वार्षिक आय ₹1.5 लाख से कम — सत्यापन के लिए प्रोफाइल अपडेट करें',
+      textMr: 'वार्षिक उत्पन्न ₹1.5 लाखांपेक्षा कमी — पडताळणीसाठी प्रोफाइल अपडेट करा',
     },
     {
       met: false,
       textEn: 'Not a government employee',
       textHi: 'सरकारी कर्मचारी नहीं होना चाहिए',
+      textMr: 'सरकारी कर्मचारी नसावा',
     },
   ];
 
@@ -74,21 +93,25 @@ export function SchemeDetail() {
     {
       nameEn: 'Aadhaar Card',
       nameHi: 'आधार कार्ड',
+      nameMr: 'आधार कार्ड',
       uploaded: userData.documents?.find((d) => d.id === 'aadhaar')?.status === 'uploaded',
     },
     {
       nameEn: 'Bank Passbook',
       nameHi: 'बैंक पासबुक',
+      nameMr: 'बँक पासबुक',
       uploaded: userData.documents?.find((d) => d.id === 'bank')?.status === 'uploaded',
     },
     {
       nameEn: 'Land Records (7/12)',
       nameHi: 'भूमि रिकॉर्ड (7/12)',
+      nameMr: 'जमीन नोंदी (7/12)',
       uploaded: userData.documents?.find((d) => d.id === 'land')?.status === 'uploaded',
     },
     {
       nameEn: 'Passport Photo',
       nameHi: 'पासपोर्ट फोटो',
+      nameMr: 'पासपोर्ट फोटो',
       uploaded: userData.documents?.find((d) => d.id === 'photo')?.status === 'uploaded',
     },
   ];
@@ -99,34 +122,42 @@ export function SchemeDetail() {
       step: 1,
       textEn: 'Fill application form',
       textHi: 'आवेदन फॉर्म भरें',
+      textMr: 'अर्ज भरा',
       timeEn: '5 minutes',
       timeHi: '5 मिनट',
+      timeMr: '5 मिनिटे',
     },
     {
       step: 2,
       textEn: 'Upload 4 documents',
       textHi: '4 दस्तावेज़ अपलोड करें',
+      textMr: '4 कागदपत्रे अपलोड करा',
       timeEn: '3 minutes',
       timeHi: '3 मिनट',
+      timeMr: '3 मिनिटे',
     },
     {
       step: 3,
       textEn: 'Submit online / via CSC',
       textHi: 'ऑनलाइन / CSC के माध्यम से जमा करें',
+      textMr: 'ऑनलाइन / CSC द्वारे सबमिट करा',
       timeEn: '2 minutes',
       timeHi: '2 मिनट',
+      timeMr: '2 मिनिटे',
     },
     {
       step: 4,
       textEn: 'Track approval status',
       textHi: 'स्वीकृति स्थिति ट्रैक करें',
+      textMr: 'मंजुरी स्थिती ट्रॅक करा',
       timeEn: 'Instant',
       timeHi: 'तुरंत',
+      timeMr: 'तात्काळ',
     },
   ];
 
 
-  const isEligibleText = isHindi ? 'आप पात्र हैं' : 'You are eligible';
+  const isEligibleText = localize('You are eligible', 'आप पात्र हैं', 'तुम्ही पात्र आहात');
 
 
   return (
@@ -141,7 +172,7 @@ export function SchemeDetail() {
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <h2 className="text-white font-semibold text-[16px]">
-            {isHindi ? 'योजना विवरण' : 'Scheme Details'}
+            {localize('Scheme Details', 'योजना विवरण', 'योजना तपशील')}
           </h2>
           <div className="w-9" />
         </div>
@@ -160,17 +191,17 @@ export function SchemeDetail() {
             </div>
             <div className="flex-1">
               <h1 className="font-bold text-white text-[18px] leading-snug">
-                {isHindi ? schemeTitleHi : schemeTitleEn}
+                {schemeTitle}
               </h1>
               <p className="text-[#C8D8C8] text-[13px] mt-1">
-                {isHindi ? schemeTypeHi : schemeTypeEn}
+                {schemeType}
               </p>
               <div className="flex gap-2 flex-wrap mt-2">
                 <span className="bg-[#2D6A2D] text-white px-2.5 py-1 rounded-full text-[10px] font-semibold">
-                  {isHindi ? 'केंद्र सरकार' : 'Central Govt'}
+                  {localize('Central Govt', 'केंद्र सरकार', 'केंद्र सरकार')}
                 </span>
                 <span className="bg-[#2D6A2D] text-white px-2.5 py-1 rounded-full text-[10px] font-semibold">
-                  {isHindi ? 'प्रत्यक्ष लाभ' : 'Direct Benefit'}
+                  {localize('Direct Benefit', 'प्रत्यक्ष लाभ', 'थेट लाभ')}
                 </span>
               </div>
             </div>
@@ -193,7 +224,7 @@ export function SchemeDetail() {
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-[15px] text-[#1C1C1E]">
-              {isHindi ? 'मुख्य जानकारी' : 'At a Glance'}
+              {localize('At a Glance', 'मुख्य जानकारी', 'एका नजरेत')}
             </h2>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -204,7 +235,11 @@ export function SchemeDetail() {
               </div>
               <div className="font-bold text-[18px] text-[#1C1C1E]">₹6,000</div>
               <div className="text-[11px] text-[#6B7280]">
-                {isHindi ? 'प्रति वर्ष (3 किश्तों में)' : 'Per year (3 installments)'}
+                {localize(
+                  'Per year (3 installments)',
+                  'प्रति वर्ष (3 किश्तों में)',
+                  'दर वर्षी (3 हप्त्यांमध्ये)'
+                )}
               </div>
             </div>
 
@@ -215,10 +250,10 @@ export function SchemeDetail() {
                 <Calendar className="w-5 h-5 text-[#FB923C]" />
               </div>
               <div className="font-bold text-[16px] text-[#1C1C1E]">
-                {isHindi ? deadlineHi : deadlineEn}
+                {deadline}
               </div>
               <div className="text-[11px] text-[#6B7280]">
-                {isHindi ? 'आखिरी तारीख' : 'Deadline'}
+                {localize('Deadline', 'आखिरी तारीख', 'अंतिम तारीख')}
               </div>
             </div>
 
@@ -230,7 +265,7 @@ export function SchemeDetail() {
               </div>
               <div className="font-bold text-[18px] text-[#1C1C1E]">3</div>
               <div className="text-[11px] text-[#6B7280]">
-                {isHindi ? 'जरूरी दस्तावेज़' : 'Documents Required'}
+                {localize('Documents Required', 'जरूरी दस्तावेज़', 'आवश्यक कागदपत्रे')}
               </div>
             </div>
 
@@ -241,10 +276,10 @@ export function SchemeDetail() {
                 <Clock className="w-5 h-5 text-[#97BC62]" />
               </div>
               <div className="font-bold text-[16px] text-[#1C1C1E]">
-                {isHindi ? '15 दिन' : '15 days'}
+                {localize('15 days', '15 दिन', '15 दिवस')}
               </div>
               <div className="text-[11px] text-[#6B7280]">
-                {isHindi ? 'प्रोसेसिंग समय' : 'Processing Time'}
+                {localize('Processing Time', 'प्रोसेसिंग समय', 'प्रक्रिया कालावधी')}
               </div>
             </div>
           </div>
@@ -264,10 +299,14 @@ export function SchemeDetail() {
           >
             <div className="flex items-center gap-2">
               <h2 className="font-bold text-[15px] text-[#1C1C1E]">
-                {isHindi ? 'पात्रता मानदंड' : 'Eligibility Criteria'}
+                {localize('Eligibility Criteria', 'पात्रता मानदंड', 'पात्रता निकष')}
               </h2>
               <span className="bg-[#97BC62]/15 text-[#2D6A2D] px-2 py-0.5 rounded-full text-[11px] font-medium">
-                {isHindi ? 'आप 5/6 शर्तें पूरी करते हैं' : 'You meet 5/6 criteria'}
+                {localize(
+                  'You meet 5/6 criteria',
+                  'आप 5/6 शर्तें पूरी करते हैं',
+                  'तुम्ही 5/6 अटी पूर्ण करता'
+                )}
               </span>
             </div>
             {expandedSection === 'eligibility' ? (
@@ -293,20 +332,19 @@ export function SchemeDetail() {
                     const isWarn = criteria.met === 'warning';
                     const icon =
                       criteria.met === true ? '✅' : criteria.met === 'warning' ? '⚠️' : '❌';
-                    const text = isHindi ? criteria.textHi : criteria.textEn;
+                    const text = localize(criteria.textEn, criteria.textHi, criteria.textMr);
 
 
                     return (
                       <div key={index} className="flex items-start gap-2">
                         <span className="mt-0.5">{icon}</span>
                         <span
-                          className={`text-[13px] ${
-                            isMet
-                              ? 'text-[#1C1C1E]'
-                              : isWarn
+                          className={`text-[13px] ${isMet
+                            ? 'text-[#1C1C1E]'
+                            : isWarn
                               ? 'text-[#FB923C]'
                               : 'text-[#6B7280]'
-                          }`}
+                            }`}
                         >
                           {text}
                         </span>
@@ -319,15 +357,17 @@ export function SchemeDetail() {
                     <AlertCircle className="w-4 h-4 text-[#FB923C] mt-0.5" />
                     <div>
                       <p className="text-[12px] text-[#FB923C] font-medium">
-                        {isHindi
-                          ? 'सटीक पात्रता के लिए अपनी प्रोफ़ाइल अपडेट करें'
-                          : 'Update your profile for accurate eligibility'}
+                        {localize(
+                          'Update your profile for accurate eligibility',
+                          'सटीक पात्रता के लिए अपनी प्रोफ़ाइल अपडेट करें',
+                          'अचूक पात्रतेसाठी तुमचे प्रोफाइल अपडेट करा'
+                        )}
                       </p>
                       <button
                         onClick={() => navigate('/profile')}
                         className="text-[#FB923C] text-[12px] font-semibold mt-1 underline"
                       >
-                        {isHindi ? 'प्रोफ़ाइल अपडेट करें →' : 'Update Profile →'}
+                        {localize('Update Profile →', 'प्रोफ़ाइल अपडेट करें →', 'प्रोफाइल अपडेट करा →')}
                       </button>
                     </div>
                   </div>
@@ -350,7 +390,7 @@ export function SchemeDetail() {
             className="w-full flex items-center justify-between"
           >
             <h2 className="font-bold text-[15px] text-[#1C1C1E]">
-              {isHindi ? 'आवश्यक दस्तावेज़' : 'Required Documents'}
+              {localize('Required Documents', 'आवश्यक दस्तावेज़', 'आवश्यक कागदपत्रे')}
             </h2>
             {expandedSection === 'documents' ? (
               <ChevronUp className="w-5 h-5 text-[#6B7280]" />
@@ -373,33 +413,26 @@ export function SchemeDetail() {
                   {documents.map((doc, index) => (
                     <div key={index} className="flex items-center gap-2 py-1.5">
                       <div
-                        className={`w-4 h-4 rounded ${
-                          doc.uploaded ? 'bg-[#97BC62]' : 'border-2 border-gray-300'
-                        } flex items-center justify-center`}
+                        className={`w-4 h-4 rounded ${doc.uploaded ? 'bg-[#97BC62]' : 'border-2 border-gray-300'
+                          } flex items-center justify-center`}
                       >
                         {doc.uploaded && (
                           <span className="text-white text-[10px] font-bold">✓</span>
                         )}
                       </div>
                       <span
-                        className={`text-[13px] flex-1 ${
-                          doc.uploaded ? 'text-[#1C1C1E]' : 'text-[#6B7280]'
-                        }`}
+                        className={`text-[13px] flex-1 ${doc.uploaded ? 'text-[#1C1C1E]' : 'text-[#6B7280]'
+                          }`}
                       >
-                        {isHindi ? doc.nameHi : doc.nameEn}
+                        {localize(doc.nameEn, doc.nameHi, doc.nameMr)}
                       </span>
                       <span
-                        className={`text-[11px] ${
-                          doc.uploaded ? 'text-[#97BC62]' : 'text-[#F5A623]'
-                        }`}
+                        className={`text-[11px] ${doc.uploaded ? 'text-[#97BC62]' : 'text-[#F5A623]'
+                          }`}
                       >
                         {doc.uploaded
-                          ? isHindi
-                            ? 'अपलोडेड'
-                            : 'Uploaded'
-                          : isHindi
-                          ? 'अपलोड करें'
-                          : 'Upload'}
+                          ? localize('Uploaded', 'अपलोडेड', 'अपलोड केले')
+                          : localize('Upload', 'अपलोड करें', 'अपलोड करा')}
                       </span>
                     </div>
                   ))}
@@ -407,7 +440,7 @@ export function SchemeDetail() {
                     onClick={() => navigate('/profile')}
                     className="w-full mt-3 py-2.5 border border-[#F5A623] text-[#F5A623] rounded-2xl font-semibold text-[13px]"
                   >
-                    {isHindi ? 'दस्तावेज़ अपलोड करें' : 'Upload Documents'}
+                    {localize('Upload Documents', 'दस्तावेज़ अपलोड करें', 'कागदपत्रे अपलोड करा')}
                   </button>
                 </div>
               </motion.div>
@@ -428,7 +461,7 @@ export function SchemeDetail() {
             className="w-full flex items-center justify-between"
           >
             <h2 className="font-bold text-[15px] text-[#1C1C1E]">
-              {isHindi ? 'आवेदन कैसे करें' : 'How to Apply'}
+              {localize('How to Apply', 'आवेदन कैसे करें', 'अर्ज कसा करावा')}
             </h2>
             {expandedSection === 'how-to-apply' ? (
               <ChevronUp className="w-5 h-5 text-[#6B7280]" />
@@ -455,10 +488,10 @@ export function SchemeDetail() {
                       </div>
                       <div className="flex-1">
                         <p className="text-[14px] text-[#1C1C1E] font-medium">
-                          {isHindi ? step.textHi : step.textEn}
+                          {localize(step.textEn, step.textHi, step.textMr)}
                         </p>
                         <p className="text-[12px] text-[#6B7280]">
-                          {isHindi ? step.timeHi : step.timeEn}
+                          {localize(step.timeEn, step.timeHi, step.timeMr)}
                         </p>
                       </div>
                     </div>
@@ -478,23 +511,31 @@ export function SchemeDetail() {
           className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 mb-4"
         >
           <h2 className="font-bold text-[15px] text-[#1C1C1E] mb-3">
-            {isHindi ? 'लाभ और भुगतान' : 'Benefits & Disbursement'}
+            {localize('Benefits & Disbursement', 'लाभ और भुगतान', 'लाभ आणि वितरण')}
           </h2>
           <p className="text-[14px] text-[#1C1C1E] mb-2">
-            {isHindi
-              ? '₹6,000 प्रति वर्ष, ₹2,000 की 3 किश्तों में सीधा बैंक खाते में'
-              : '₹6,000 per year, in 3 installments of ₹2,000, directly to your bank account'}
+            {localize(
+              '₹6,000 per year, in 3 installments of ₹2,000, directly to your bank account',
+              '₹6,000 प्रति वर्ष, ₹2,000 की 3 किश्तों में सीधा बैंक खाते में',
+              '₹6,000 दर वर्षी, ₹2,000 च्या 3 हप्त्यांमध्ये थेट तुमच्या बँक खात्यात'
+            )}
           </p>
           <div className="bg-[#F7F3EE] rounded-2xl p-3 mb-2 flex items-center gap-2">
             <span className="text-[18px]">💳</span>
             <p className="text-[13px] text-[#2D6A2D] font-medium">
-              {isHindi ? 'प्रत्यक्ष लाभ अंतरण (DBT)' : 'Direct Benefit Transfer (DBT)'}
+              {localize(
+                'Direct Benefit Transfer (DBT)',
+                'प्रत्यक्ष लाभ अंतरण (DBT)',
+                'थेट लाभ हस्तांतरण (DBT)'
+              )}
             </p>
           </div>
           <p className="text-[12px] text-[#97BC62]">
-            {isHindi
-              ? 'पिछली किस्त में 8.2 करोड़ किसानों को लाभ दिया गया'
-              : 'Last installment disbursed to 8.2 Cr farmers'}
+            {localize(
+              'Last installment disbursed to 8.2 Cr farmers',
+              'पिछली किस्त में 8.2 करोड़ किसानों को लाभ दिया गया',
+              'शेवटचा हप्ता 8.2 कोटी शेतकऱ्यांना वितरित केला'
+            )}
           </p>
         </motion.div>
       </div>
@@ -503,16 +544,16 @@ export function SchemeDetail() {
       {/* Sticky Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 flex gap-2 z-20">
         <button
-          onClick={() => {/* save scheme / bookmark later */}}
+          onClick={() => {/* save scheme / bookmark later */ }}
           className="flex-1 py-3 border border-gray-300 text-[#1C1C1E] rounded-xl font-medium text-[13px] flex items-center justify-center gap-1"
         >
-          💾 {isHindi ? 'सेव करें' : 'Save'}
+          💾 {localize('Save', 'सेव करें', 'जतन करा')}
         </button>
         <button
           onClick={() => navigate(`/apply/${id}`)}
           className="flex-1 py-3 bg-[#F5A623] text-white rounded-xl font-bold text-[14px]"
         >
-          {isHindi ? 'आवेदन करें' : 'Apply Now'}
+          {localize('Apply Now', 'आवेदन करें', 'आता अर्ज करा')}
         </button>
       </div>
     </div>

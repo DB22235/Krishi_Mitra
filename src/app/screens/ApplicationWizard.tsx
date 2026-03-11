@@ -31,13 +31,15 @@ interface DocumentItem {
   key: string;
   label: string;
   labelHi: string;
+  labelMr: string;
   uploaded: boolean;
   quality: 'good' | 'poor' | '';
   required: boolean;
   autoExtracted?: Record<string, string>;
   autoExtractedHi?: Record<string, string>;
+  autoExtractedMr?: Record<string, string>;
   icon: string;
-  profileDocId?: string; // maps to userData.documents[].id
+  profileDocId?: string;
   file?: string;
 }
 
@@ -46,12 +48,14 @@ interface FormField {
   key: string;
   label: string;
   labelHi: string;
+  labelMr: string;
   value: string;
   autoFilled: boolean;
   editable: boolean;
   type: 'text' | 'date' | 'number' | 'tel';
   placeholder: string;
   placeholderHi: string;
+  placeholderMr: string;
   voiceEnabled?: boolean;
   halfWidth?: boolean;
 }
@@ -60,13 +64,162 @@ interface FormField {
 type WizardStep = 'documents' | 'form' | 'review' | 'success';
 
 // ─── Scheme names map ───────────────────────────────────────────
-const schemeNames: Record<string, { en: string; hi: string; logo: string }> = {
-  'pm-kisan': { en: 'PM-Kisan Samman Nidhi', hi: 'प्रधानमंत्री किसान सम्मान निधि', logo: '🏛️' },
-  pmfby: { en: 'PM Fasal Bima Yojana', hi: 'प्रधानमंत्री फसल बीमा योजना', logo: '🌾' },
-  'soil-health': { en: 'Soil Health Card', hi: 'मृदा स्वास्थ्य कार्ड', logo: '🧪' },
-  kcc: { en: 'Kisan Credit Card', hi: 'किसान क्रेडिट कार्ड', logo: '💳' },
-  'pm-kusum': { en: 'PM-KUSUM Solar Pump', hi: 'पीएम कुसुम सोलर पंप', logo: '☀️' },
+const schemeNames: Record<string, { en: string; hi: string; mr: string; logo: string }> = {
+  'pm-kisan': {
+    en: 'PM-Kisan Samman Nidhi',
+    hi: 'प्रधानमंत्री किसान सम्मान निधि',
+    mr: 'प्रधानमंत्री किसान सन्मान निधी',
+    logo: '🏛️'
+  },
+  pmfby: {
+    en: 'PM Fasal Bima Yojana',
+    hi: 'प्रधानमंत्री फसल बीमा योजना',
+    mr: 'प्रधानमंत्री पीक विमा योजना',
+    logo: '🌾'
+  },
+  'soil-health': {
+    en: 'Soil Health Card',
+    hi: 'मृदा स्वास्थ्य कार्ड',
+    mr: 'मृदा आरोग्य कार्ड',
+    logo: '🧪'
+  },
+  kcc: {
+    en: 'Kisan Credit Card',
+    hi: 'किसान क्रेडिट कार्ड',
+    mr: 'किसान क्रेडिट कार्ड',
+    logo: '💳'
+  },
+  'pm-kusum': {
+    en: 'PM-KUSUM Solar Pump',
+    hi: 'पीएम कुसुम सोलर पंप',
+    mr: 'पीएम कुसुम सोलर पंप',
+    logo: '☀️'
+  },
 };
+
+// ─── Translations ───────────────────────────────────────────────
+const translations = {
+  uploadDocuments: { en: 'Upload Documents', hi: 'दस्तावेज़ अपलोड करें', mr: 'कागदपत्रे अपलोड करा' },
+  documentsUploaded: {
+    en: (uploaded: number, total: number) => `${uploaded}/${total} uploaded • Upload all required documents`,
+    hi: (uploaded: number, total: number) => `${uploaded}/${total} दस्तावेज़ अपलोड हुए • आवश्यक दस्तावेज़ अपलोड करें`,
+    mr: (uploaded: number, total: number) => `${uploaded}/${total} अपलोड झाले • सर्व आवश्यक कागदपत्रे अपलोड करा`
+  },
+  documentsPreFilled: {
+    en: (count: number) => `${count} documents pre-filled from your profile`,
+    hi: (count: number) => `प्रोफ़ाइल से ${count} दस्तावेज़ पहले से अपलोड हैं`,
+    mr: (count: number) => `तुमच्या प्रोफाइलमधून ${count} कागदपत्रे आधीच भरलेली आहेत`
+  },
+  profileComplete: {
+    en: (percent: number) => `Profile ${percent}% complete`,
+    hi: (percent: number) => `प्रोफ़ाइल ${percent}% पूर्ण`,
+    mr: (percent: number) => `प्रोफाइल ${percent}% पूर्ण`
+  },
+  profile: { en: 'Profile', hi: 'प्रोफ़ाइल', mr: 'प्रोफाइल' },
+  uploadProgress: { en: 'Upload Progress', hi: 'अपलोड प्रगति', mr: 'अपलोड प्रगती' },
+  required: { en: 'Required', hi: 'आवश्यक', mr: 'आवश्यक' },
+  remove: { en: 'Remove', hi: 'हटाएं', mr: 'काढा' },
+  change: { en: 'Change', hi: 'बदलें', mr: 'बदला' },
+  done: { en: 'Done', hi: 'अपलोड', mr: 'पूर्ण' },
+  camera: { en: 'Camera', hi: 'फ़ोटो लें', mr: 'कॅमेरा' },
+  gallery: { en: 'Gallery', hi: 'गैलरी', mr: 'गॅलरी' },
+  fillApplicationForm: { en: 'Fill Application Form', hi: 'आवेदन फॉर्म भरें', mr: 'अर्ज फॉर्म भरा' },
+  fillEmptyFields: {
+    en: 'Fill empty fields, rest auto-filled from your profile',
+    hi: 'खाली फ़ील्ड भरें, बाकी प्रोफ़ाइल से ऑटो-फिल हुए हैं',
+    mr: 'रिकामी फील्ड भरा, बाकी प्रोफाइलमधून ऑटो-फिल झाले आहेत'
+  },
+  autoFilledFields: {
+    en: (filled: number, total: number) => `Auto-filled ${filled}/${total} fields from profile 🎉`,
+    hi: (filled: number, total: number) => `प्रोफ़ाइल से ${filled}/${total} फ़ील्ड ऑटो-फिल हुए 🎉`,
+    mr: (filled: number, total: number) => `प्रोफाइलमधून ${filled}/${total} फील्ड ऑटो-फिल झाले 🎉`
+  },
+  completeProfile: {
+    en: 'Complete your profile to auto-fill more fields',
+    hi: 'प्रोफ़ाइल पूरा करके और फ़ील्ड ऑटो-फिल करवाएं',
+    mr: 'अधिक फील्ड ऑटो-फिल करण्यासाठी तुमचे प्रोफाइल पूर्ण करा'
+  },
+  update: { en: 'Update', hi: 'अपडेट करें', mr: 'अपडेट करा' },
+  fromProfile: { en: 'Profile', hi: 'प्रोफ़ाइल', mr: 'प्रोफाइल' },
+  fill: { en: 'Fill', hi: 'भरें', mr: 'भरा' },
+  voiceInput: { en: 'Voice input', hi: 'बोलकर भरें', mr: 'आवाजाने भरा' },
+  reviewApplication: { en: 'Review Application', hi: 'आवेदन की समीक्षा करें', mr: 'अर्जाचे पुनरावलोकन करा' },
+  verifyBeforeSubmit: {
+    en: 'Verify all information before submitting',
+    hi: 'सभी जानकारी जांचें और जमा करें',
+    mr: 'सबमिट करण्यापूर्वी सर्व माहिती तपासा'
+  },
+  applicationComplete: {
+    en: (percent: number) => `Application ${percent}% complete`,
+    hi: (percent: number) => `आवेदन ${percent}% पूरा है`,
+    mr: (percent: number) => `अर्ज ${percent}% पूर्ण`
+  },
+  applicationForm: { en: 'Application Form', hi: 'आवेदन फॉर्म', mr: 'अर्ज फॉर्म' },
+  personalInfo: { en: 'Personal Information', hi: 'व्यक्तिगत जानकारी', mr: 'वैयक्तिक माहिती' },
+  landLocation: { en: 'Land & Location', hi: 'भूमि एवं स्थान', mr: 'जमीन आणि स्थान' },
+  bankDetails: { en: 'Bank Details', hi: 'बैंक विवरण', mr: 'बँक तपशील' },
+  documents: { en: 'Documents', hi: 'दस्तावेज़', mr: 'कागदपत्रे' },
+  edit: { en: 'Edit', hi: 'बदलें', mr: 'संपादित करा' },
+  notFilled: { en: 'Not filled', hi: 'भरा नहीं', mr: 'भरलेले नाही' },
+  fromProfileTag: { en: 'From profile', hi: 'प्रोफ़ाइल से', mr: 'प्रोफाइलमधून' },
+  missing: { en: 'Missing', hi: 'गायब', mr: 'गहाळ' },
+  disclaimer: {
+    en: 'By submitting, I confirm all information is correct. Providing false information may lead to application rejection.',
+    hi: 'जमा करने पर, मैं पुष्टि करता/करती हूं कि सभी जानकारी सही है। गलत जानकारी देने पर आवेदन रद्द हो सकता है।',
+    mr: 'सबमिट करून, मी सर्व माहिती बरोबर असल्याची पुष्टी करतो. चुकीची माहिती दिल्यास अर्ज नाकारला जाऊ शकतो.'
+  },
+  preview: { en: 'Preview', hi: 'प्रीव्यू', mr: 'पूर्वावलोकन' },
+  submitNow: { en: 'Submit Now', hi: 'अभी जमा करें', mr: 'आता सबमिट करा' },
+  applicationSubmitted: { en: 'Application Submitted!', hi: 'आवेदन सफलतापूर्वक जमा हुआ!', mr: 'अर्ज यशस्वीरित्या सबमिट झाला!' },
+  applicationRecorded: {
+    en: (scheme: string) => `Your application for ${scheme} has been recorded`,
+    hi: (scheme: string) => `${scheme} के लिए आपका आवेदन दर्ज हो गया है`,
+    mr: (scheme: string) => `${scheme} साठी तुमचा अर्ज नोंदवला गेला आहे`
+  },
+  referenceNumber: { en: 'Reference Number', hi: 'संदर्भ संख्या', mr: 'संदर्भ क्रमांक' },
+  copiedToClipboard: { en: 'Copied to clipboard!', hi: 'कॉपी हो गया!', mr: 'कॉपी झाले!' },
+  applicant: { en: 'Applicant', hi: 'आवेदक', mr: 'अर्जदार' },
+  mobile: { en: 'Mobile', hi: 'मोबाइल', mr: 'मोबाइल' },
+  account: { en: 'Account', hi: 'खाता', mr: 'खाते' },
+  estimatedTime: { en: 'Estimated: 15 working days', hi: 'अनुमानित समय: 15 कार्य दिवस', mr: 'अंदाजित: 15 कार्य दिवस' },
+  estimatedProcessing: { en: 'Estimated processing time', hi: 'प्रसंस्करण का अनुमानित समय', mr: 'अंदाजित प्रक्रिया वेळ' },
+  smsConfirmation: { en: 'SMS Confirmation Sent', hi: 'SMS पुष्टि भेजी गई', mr: 'SMS पुष्टी पाठवली' },
+  sentTo: { en: 'Sent to', hi: 'आपके', mr: 'पाठवले' },
+  toRegisteredNumber: { en: 'To your registered number', hi: 'आपके रजिस्टर्ड नंबर पर', mr: 'तुमच्या नोंदणीकृत क्रमांकावर' },
+  nextSteps: { en: 'Next Steps', hi: 'अगला कदम', mr: 'पुढील पावले' },
+  trackInApplications: {
+    en: 'Track status in "My Applications" section',
+    hi: 'आवेदन की स्थिति "मेरे आवेदन" में ट्रैक करें',
+    mr: '"माझे अर्ज" विभागात स्थिती ट्रॅक करा'
+  },
+  trackApplication: { en: 'Track Application', hi: 'ट्रैक करें', mr: 'अर्ज ट्रॅक करा' },
+  goHome: { en: 'Go Home', hi: 'होम', mr: 'मुख्यपृष्ठ' },
+  downloadReceipt: { en: 'Download Receipt', hi: 'रसीद डाउनलोड करें', mr: 'पावती डाउनलोड करा' },
+  applicationPreview: { en: 'Application Preview', hi: 'आवेदन प्रीव्यू', mr: 'अर्ज पूर्वावलोकन' },
+  aadhaar: { en: 'Aadhaar:', hi: 'आधार:', mr: 'आधार:' },
+  closePreview: { en: 'Close Preview', hi: 'बंद करें', mr: 'पूर्वावलोकन बंद करा' },
+  step: {
+    en: (current: number, total: number, name: string) => `Step ${current}/${total} — ${name}`,
+    hi: (current: number, total: number, name: string) => `चरण ${current}/${total} — ${name}`,
+    mr: (current: number, total: number, name: string) => `पाऊल ${current}/${total} — ${name}`
+  },
+  back: { en: 'Back', hi: 'पीछे', mr: 'मागे' },
+  continue: { en: 'Continue', hi: 'आगे बढ़ें', mr: 'पुढे चला' },
+  documentsRemaining: {
+    en: (count: number) => `${count} documents remaining`,
+    hi: (count: number) => `${count} दस्तावेज़ बाकी हैं`,
+    mr: (count: number) => `${count} कागदपत्रे बाकी आहेत`
+  },
+  fillRequiredFields: { en: 'Please fill all required fields', hi: 'सभी खाली फ़ील्ड भरें', mr: 'कृपया सर्व आवश्यक फील्ड भरा' },
+};
+
+// ─── Progress steps ─────────────────────────────────────────────
+const progressStepsData = [
+  { en: 'Documents', hi: 'दस्तावेज़', mr: 'कागदपत्रे' },
+  { en: 'Details', hi: 'विवरण', mr: 'तपशील' },
+  { en: 'Review', hi: 'समीक्षा', mr: 'पुनरावलोकन' },
+  { en: 'Submit', hi: 'जमा', mr: 'सबमिट' },
+];
 
 export function ApplicationWizard() {
   const navigate = useNavigate();
@@ -74,10 +227,37 @@ export function ApplicationWizard() {
   const { language } = useLanguage();
   const { userData, getProfileCompletion } = useUser();
   const isHindi = language === 'hi';
+  const isMarathi = language === 'mr';
 
   const scheme = schemeNames[schemeId || 'pm-kisan'] || schemeNames['pm-kisan'];
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeUploadKey, setActiveUploadKey] = useState('');
+
+  // ─── Translation helper ───────────────────────────────────
+  const t = useCallback((key: keyof typeof translations) => {
+    const translation = translations[key];
+    if (typeof translation === 'object' && 'en' in translation) {
+      if (isMarathi && 'mr' in translation) return translation.mr;
+      if (isHindi && 'hi' in translation) return translation.hi;
+      return translation.en;
+    }
+    return '';
+  }, [isHindi, isMarathi]);
+
+  // Helper to get scheme name
+  const getSchemeName = useCallback(() => {
+    if (isMarathi) return scheme.mr;
+    if (isHindi) return scheme.hi;
+    return scheme.en;
+  }, [isHindi, isMarathi, scheme]);
+
+  // Helper to get progress step name
+  const getProgressStepName = useCallback((index: number) => {
+    const step = progressStepsData[index];
+    if (isMarathi) return step.mr;
+    if (isHindi) return step.hi;
+    return step.en;
+  }, [isHindi, isMarathi]);
 
   // ─── State ──────────────────────────────────────────────────
   const [currentStep, setCurrentStep] = useState<WizardStep>('documents');
@@ -110,28 +290,28 @@ export function ApplicationWizard() {
   };
 
   // ─── Helper: get gender display ───────────────────────────
-  const getGenderDisplay = () => {
-    const map: Record<string, { en: string; hi: string }> = {
-      Male: { en: 'Male', hi: 'पुरुष' },
-      Female: { en: 'Female', hi: 'महिला' },
-      Other: { en: 'Other', hi: 'अन्य' },
+  const getGenderDisplay = useCallback(() => {
+    const map: Record<string, { en: string; hi: string; mr: string }> = {
+      Male: { en: 'Male', hi: 'पुरुष', mr: 'पुरुष' },
+      Female: { en: 'Female', hi: 'महिला', mr: 'स्त्री' },
+      Other: { en: 'Other', hi: 'अन्य', mr: 'इतर' },
     };
-    return isHindi
-      ? map[userData.gender]?.hi || ''
-      : map[userData.gender]?.en || '';
-  };
+    if (isMarathi) return map[userData.gender]?.mr || '';
+    if (isHindi) return map[userData.gender]?.hi || '';
+    return map[userData.gender]?.en || '';
+  }, [isHindi, isMarathi, userData.gender]);
 
   // ─── Helper: get ownership display ────────────────────────
-  const getOwnershipDisplay = () => {
-    const map: Record<string, { en: string; hi: string }> = {
-      owner: { en: 'Owner', hi: 'मालिक' },
-      tenant: { en: 'Tenant', hi: 'किरायेदार' },
-      sharecropper: { en: 'Sharecropper', hi: 'बटाईदार' },
+  const getOwnershipDisplay = useCallback(() => {
+    const map: Record<string, { en: string; hi: string; mr: string }> = {
+      owner: { en: 'Owner', hi: 'मालिक', mr: 'मालक' },
+      tenant: { en: 'Tenant', hi: 'किरायेदार', mr: 'भाडेकरू' },
+      sharecropper: { en: 'Sharecropper', hi: 'बटाईदार', mr: 'वाटेकरी' },
     };
-    return isHindi
-      ? map[userData.landOwnership]?.hi || ''
-      : map[userData.landOwnership]?.en || '';
-  };
+    if (isMarathi) return map[userData.landOwnership]?.mr || '';
+    if (isHindi) return map[userData.landOwnership]?.hi || '';
+    return map[userData.landOwnership]?.en || '';
+  }, [isHindi, isMarathi, userData.landOwnership]);
 
   // ─── Initialize documents from profile ────────────────────
   const aadhaarDoc = getProfileDocStatus('aadhaar');
@@ -144,6 +324,7 @@ export function ApplicationWizard() {
       key: 'aadhaar',
       label: 'Aadhaar Card',
       labelHi: 'आधार कार्ड',
+      labelMr: 'आधार कार्ड',
       uploaded: aadhaarDoc.uploaded,
       quality: aadhaarDoc.uploaded ? 'good' : '',
       required: true,
@@ -155,12 +336,16 @@ export function ApplicationWizard() {
       autoExtractedHi: userData.name && userData.aadhaar
         ? { नाम: userData.name, आधार: maskAadhaar(userData.aadhaar) }
         : undefined,
+      autoExtractedMr: userData.name && userData.aadhaar
+        ? { नाव: userData.name, आधार: maskAadhaar(userData.aadhaar) }
+        : undefined,
       icon: '🪪',
     },
     {
       key: 'landRecords',
       label: 'Land Records (7/12)',
       labelHi: 'भूमि अभिलेख (7/12)',
+      labelMr: 'जमीन नोंदी (7/12)',
       uploaded: landDoc.uploaded,
       quality: landDoc.uploaded ? 'good' : '',
       required: true,
@@ -172,12 +357,16 @@ export function ApplicationWizard() {
       autoExtractedHi: landDoc.uploaded && userData.landSize > 0
         ? { 'भूमि आकार': `${userData.landSize} ${userData.landUnit}`, स्वामित्व: getOwnershipDisplay() }
         : undefined,
+      autoExtractedMr: landDoc.uploaded && userData.landSize > 0
+        ? { 'जमीन क्षेत्र': `${userData.landSize} ${userData.landUnit}`, मालकी: getOwnershipDisplay() }
+        : undefined,
       icon: '📜',
     },
     {
       key: 'bankPassbook',
       label: 'Bank Passbook',
       labelHi: 'बैंक पासबुक',
+      labelMr: 'बँक पासबुक',
       uploaded: bankDoc.uploaded,
       quality: bankDoc.uploaded ? 'good' : '',
       required: true,
@@ -189,12 +378,16 @@ export function ApplicationWizard() {
       autoExtractedHi: userData.bankAccount
         ? { खाता: maskBankAccount(userData.bankAccount), IFSC: userData.ifscCode || '', बैंक: userData.bankName || '' }
         : undefined,
+      autoExtractedMr: userData.bankAccount
+        ? { खाते: maskBankAccount(userData.bankAccount), IFSC: userData.ifscCode || '', बँक: userData.bankName || '' }
+        : undefined,
       icon: '🏦',
     },
     {
       key: 'photo',
       label: 'Passport Photo',
       labelHi: 'पासपोर्ट फ़ोटो',
+      labelMr: 'पासपोर्ट फोटो',
       uploaded: photoDoc.uploaded || !!userData.profileImage,
       quality: (photoDoc.uploaded || !!userData.profileImage) ? 'good' : '',
       required: true,
@@ -203,6 +396,20 @@ export function ApplicationWizard() {
       icon: '📷',
     },
   ]);
+
+  // Helper to get document label
+  const getDocLabel = useCallback((doc: DocumentItem) => {
+    if (isMarathi) return doc.labelMr;
+    if (isHindi) return doc.labelHi;
+    return doc.label;
+  }, [isHindi, isMarathi]);
+
+  // Helper to get auto extracted data
+  const getAutoExtracted = useCallback((doc: DocumentItem) => {
+    if (isMarathi && doc.autoExtractedMr) return doc.autoExtractedMr;
+    if (isHindi && doc.autoExtractedHi) return doc.autoExtractedHi;
+    return doc.autoExtracted;
+  }, [isHindi, isMarathi]);
 
   // ─── Initialize form fields from profile ──────────────────
   const [formFields, setFormFields] = useState<FormField[]>(() => {
@@ -220,193 +427,230 @@ export function ApplicationWizard() {
         key: 'name',
         label: 'Full Name',
         labelHi: 'पूरा नाम',
+        labelMr: 'पूर्ण नाव',
         value: userData.name || '',
         autoFilled: hasName,
         editable: !hasName,
         type: 'text' as const,
         placeholder: 'Enter your full name',
         placeholderHi: 'अपना पूरा नाम दर्ज करें',
+        placeholderMr: 'तुमचे पूर्ण नाव प्रविष्ट करा',
       },
       {
         key: 'fatherName',
         label: "Father's / Spouse Name",
         labelHi: 'पिता / पति का नाम',
+        labelMr: 'वडील / जोडीदाराचे नाव',
         value: '',
         autoFilled: false,
         editable: true,
         type: 'text' as const,
         placeholder: "Enter father's or spouse name",
         placeholderHi: 'पिता या पति का नाम दर्ज करें',
+        placeholderMr: 'वडील किंवा जोडीदाराचे नाव प्रविष्ट करा',
       },
       {
         key: 'age',
         label: 'Age',
         labelHi: 'उम्र',
+        labelMr: 'वय',
         value: userData.age ? `${userData.age}` : '',
         autoFilled: hasAge,
         editable: !hasAge,
         type: 'number' as const,
         placeholder: 'e.g. 35',
         placeholderHi: 'जैसे 35',
+        placeholderMr: 'उदा. 35',
         halfWidth: true,
       },
       {
         key: 'gender',
         label: 'Gender',
         labelHi: 'लिंग',
+        labelMr: 'लिंग',
         value: getGenderDisplay(),
         autoFilled: !!userData.gender,
         editable: !userData.gender,
         type: 'text' as const,
         placeholder: 'Male / Female / Other',
         placeholderHi: 'पुरुष / महिला / अन्य',
+        placeholderMr: 'पुरुष / स्त्री / इतर',
         halfWidth: true,
       },
       {
         key: 'mobile',
         label: 'Mobile Number',
         labelHi: 'मोबाइल नंबर',
+        labelMr: 'मोबाइल क्रमांक',
         value: userData.mobile ? `+91 ${userData.mobile}` : '',
         autoFilled: hasMobile,
         editable: !hasMobile,
         type: 'tel' as const,
         placeholder: '+91 XXXXXXXXXX',
         placeholderHi: '+91 XXXXXXXXXX',
+        placeholderMr: '+91 XXXXXXXXXX',
         halfWidth: true,
       },
       {
         key: 'aadhaar',
         label: 'Aadhaar Number',
         labelHi: 'आधार नंबर',
+        labelMr: 'आधार क्रमांक',
         value: userData.aadhaar ? maskAadhaar(userData.aadhaar) : '',
         autoFilled: hasAadhaar,
         editable: !hasAadhaar,
         type: 'text' as const,
         placeholder: 'XXXX-XXXX-XXXX',
         placeholderHi: 'XXXX-XXXX-XXXX',
+        placeholderMr: 'XXXX-XXXX-XXXX',
         halfWidth: true,
       },
       {
         key: 'state',
         label: 'State',
         labelHi: 'राज्य',
+        labelMr: 'राज्य',
         value: userData.state || '',
         autoFilled: hasState,
         editable: !hasState,
         type: 'text' as const,
         placeholder: 'Enter state',
         placeholderHi: 'राज्य दर्ज करें',
+        placeholderMr: 'राज्य प्रविष्ट करा',
         halfWidth: true,
       },
       {
         key: 'district',
         label: 'District',
         labelHi: 'जिला',
+        labelMr: 'जिल्हा',
         value: userData.district || '',
         autoFilled: hasDistrict,
         editable: !hasDistrict,
         type: 'text' as const,
         placeholder: 'Enter district',
         placeholderHi: 'जिला दर्ज करें',
+        placeholderMr: 'जिल्हा प्रविष्ट करा',
         halfWidth: true,
       },
       {
         key: 'village',
         label: 'Village / Gram',
         labelHi: 'गाँव / ग्राम',
+        labelMr: 'गाव / ग्राम',
         value: '',
         autoFilled: false,
         editable: true,
         type: 'text' as const,
         placeholder: 'Enter village name',
         placeholderHi: 'गाँव का नाम दर्ज करें',
+        placeholderMr: 'गावाचे नाव प्रविष्ट करा',
       },
       {
         key: 'landSize',
         label: 'Land Area',
         labelHi: 'भूमि क्षेत्र',
+        labelMr: 'जमीन क्षेत्र',
         value: userData.landSize > 0 ? `${userData.landSize} ${userData.landUnit}` : '',
         autoFilled: userData.landSize > 0,
         editable: !(userData.landSize > 0),
         type: 'text' as const,
         placeholder: 'e.g. 2.5 Hectares',
         placeholderHi: 'जैसे 2.5 हेक्टेयर',
+        placeholderMr: 'उदा. 2.5 हेक्टर',
         halfWidth: true,
       },
       {
         key: 'ownership',
         label: 'Ownership Type',
         labelHi: 'स्वामित्व प्रकार',
+        labelMr: 'मालकी प्रकार',
         value: getOwnershipDisplay(),
         autoFilled: !!userData.landOwnership,
         editable: !userData.landOwnership,
         type: 'text' as const,
         placeholder: 'Owner / Tenant',
         placeholderHi: 'मालिक / किरायेदार',
+        placeholderMr: 'मालक / भाडेकरू',
         halfWidth: true,
       },
       {
         key: 'surveyNumber',
         label: 'Land Survey Number',
         labelHi: 'भूमि सर्वे नंबर',
+        labelMr: 'जमीन सर्वे क्रमांक',
         value: '',
         autoFilled: false,
         editable: true,
         type: 'text' as const,
         placeholder: 'Enter survey number',
         placeholderHi: 'सर्वे नंबर दर्ज करें',
+        placeholderMr: 'सर्वे क्रमांक प्रविष्ट करा',
         voiceEnabled: true,
       },
       {
         key: 'bankName',
         label: 'Bank Name',
         labelHi: 'बैंक का नाम',
+        labelMr: 'बँकेचे नाव',
         value: userData.bankName || '',
         autoFilled: !!userData.bankName,
         editable: !userData.bankName,
         type: 'text' as const,
         placeholder: 'e.g. State Bank of India',
         placeholderHi: 'जैसे भारतीय स्टेट बैंक',
+        placeholderMr: 'उदा. स्टेट बँक ऑफ इंडिया',
       },
       {
         key: 'bankAccount',
         label: 'Bank Account Number',
         labelHi: 'बैंक खाता संख्या',
+        labelMr: 'बँक खाते क्रमांक',
         value: userData.bankAccount ? maskBankAccount(userData.bankAccount) : '',
         autoFilled: hasBank,
         editable: !hasBank,
         type: 'text' as const,
         placeholder: 'XXXXXXXXXXXX',
         placeholderHi: 'XXXXXXXXXXXX',
+        placeholderMr: 'XXXXXXXXXXXX',
         halfWidth: true,
       },
       {
         key: 'ifsc',
         label: 'IFSC Code',
         labelHi: 'IFSC कोड',
+        labelMr: 'IFSC कोड',
         value: userData.ifscCode || '',
         autoFilled: hasIFSC,
         editable: !hasIFSC,
         type: 'text' as const,
         placeholder: 'SBIN0001234',
         placeholderHi: 'SBIN0001234',
+        placeholderMr: 'SBIN0001234',
         halfWidth: true,
       },
     ];
   });
 
-  // ─── Computed values ────────────────────────────────────────
-  const progressSteps = useMemo(() => [
-    { en: 'Documents', hi: 'दस्तावेज़' },
-    { en: 'Details', hi: 'विवरण' },
-    { en: 'Review', hi: 'समीक्षा' },
-    { en: 'Submit', hi: 'जमा' },
-  ], []);
+  // Helper to get field label
+  const getFieldLabel = useCallback((field: FormField) => {
+    if (isMarathi) return field.labelMr;
+    if (isHindi) return field.labelHi;
+    return field.label;
+  }, [isHindi, isMarathi]);
 
+  // Helper to get field placeholder
+  const getFieldPlaceholder = useCallback((field: FormField) => {
+    if (isMarathi) return field.placeholderMr;
+    if (isHindi) return field.placeholderHi;
+    return field.placeholder;
+  }, [isHindi, isMarathi]);
+
+  // ─── Computed values ────────────────────────────────────────
   const currentStepIndex =
     currentStep === 'documents' ? 0 :
-    currentStep === 'form' ? 1 :
-    currentStep === 'review' ? 2 : 3;
+      currentStep === 'form' ? 1 :
+        currentStep === 'review' ? 2 : 3;
 
   const uploadedDocsCount = documents.filter((d) => d.uploaded).length;
   const totalDocsCount = documents.length;
@@ -480,21 +724,24 @@ export function ApplicationWizard() {
   }, []);
 
   const handleCopyRef = useCallback(() => {
-    navigator.clipboard?.writeText(refNumber).catch(() => {});
+    navigator.clipboard?.writeText(refNumber).catch(() => { });
     setCopiedRef(true);
     setTimeout(() => setCopiedRef(false), 2000);
   }, [refNumber]);
 
   const handleShare = useCallback(() => {
-    const text = isHindi
-      ? `मेरा ${scheme.hi} आवेदन सफलतापूर्वक जमा हुआ! संदर्भ: ${refNumber}`
-      : `My ${scheme.en} application submitted successfully! Ref: ${refNumber}`;
+    const schemeName = getSchemeName();
+    const text = isMarathi
+      ? `माझा ${schemeName} अर्ज यशस्वीरित्या सबमिट झाला! संदर्भ: ${refNumber}`
+      : isHindi
+        ? `मेरा ${schemeName} आवेदन सफलतापूर्वक जमा हुआ! संदर्भ: ${refNumber}`
+        : `My ${schemeName} application submitted successfully! Ref: ${refNumber}`;
     if (navigator.share) {
-      navigator.share({ title: scheme.en, text }).catch(() => {});
+      navigator.share({ title: scheme.en, text }).catch(() => { });
     } else {
-      navigator.clipboard?.writeText(text).catch(() => {});
+      navigator.clipboard?.writeText(text).catch(() => { });
     }
-  }, [isHindi, scheme, refNumber]);
+  }, [isHindi, isMarathi, scheme, refNumber, getSchemeName]);
 
   const goNext = useCallback(() => {
     if (currentStep === 'documents') setCurrentStep('form');
@@ -524,12 +771,12 @@ export function ApplicationWizard() {
     >
       <div className="mb-4">
         <h2 className="font-bold text-[22px] text-[#1C1C1E] mb-1">
-          {isHindi ? 'दस्तावेज़ अपलोड करें' : 'Upload Documents'}
+          {t('uploadDocuments')}
         </h2>
         <p className="text-[13px] text-[#6B7280]">
-          {isHindi
-            ? `${uploadedDocsCount}/${totalDocsCount} दस्तावेज़ अपलोड हुए • आवश्यक दस्तावेज़ अपलोड करें`
-            : `${uploadedDocsCount}/${totalDocsCount} uploaded • Upload all required documents`}
+          {typeof translations.documentsUploaded[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+            ? (translations.documentsUploaded[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (u: number, t: number) => string)(uploadedDocsCount, totalDocsCount)
+            : ''}
         </p>
       </div>
 
@@ -541,21 +788,21 @@ export function ApplicationWizard() {
           </div>
           <div className="flex-1">
             <p className="text-[12px] text-[#2D6A2D] font-medium">
-              {isHindi
-                ? `प्रोफ़ाइल से ${uploadedDocsCount} दस्तावेज़ पहले से अपलोड हैं`
-                : `${uploadedDocsCount} documents pre-filled from your profile`}
+              {typeof translations.documentsPreFilled[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+                ? (translations.documentsPreFilled[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (c: number) => string)(uploadedDocsCount)
+                : ''}
             </p>
             <p className="text-[10px] text-[#6B7280] mt-0.5">
-              {isHindi
-                ? `प्रोफ़ाइल ${profilePercent}% पूर्ण`
-                : `Profile ${profilePercent}% complete`}
+              {typeof translations.profileComplete[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+                ? (translations.profileComplete[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (p: number) => string)(profilePercent)
+                : ''}
             </p>
           </div>
           <button
             onClick={() => navigate('/profile')}
             className="text-[11px] font-semibold text-[#F5A623] underline flex-shrink-0"
           >
-            {isHindi ? 'प्रोफ़ाइल' : 'Profile'}
+            {t('profile')}
           </button>
         </div>
       )}
@@ -568,7 +815,7 @@ export function ApplicationWizard() {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[13px] font-semibold text-[#1C1C1E]">
-              {isHindi ? 'अपलोड प्रगति' : 'Upload Progress'}
+              {t('uploadProgress')}
             </span>
             <span className="text-[12px] font-bold text-[#F5A623]">
               {uploadedDocsCount}/{totalDocsCount}
@@ -592,11 +839,10 @@ export function ApplicationWizard() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.05 }}
-          className={`bg-white rounded-2xl p-4 shadow-sm border-2 transition-all ${
-            doc.uploaded
-              ? 'border-[#97BC62]'
-              : 'border-dashed border-gray-300'
-          }`}
+          className={`bg-white rounded-2xl p-4 shadow-sm border-2 transition-all ${doc.uploaded
+            ? 'border-[#97BC62]'
+            : 'border-dashed border-gray-300'
+            }`}
         >
           {doc.uploaded ? (
             <div className="flex items-start gap-3">
@@ -615,14 +861,12 @@ export function ApplicationWizard() {
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-4 h-4 text-[#97BC62] flex-shrink-0" />
                   <h3 className="font-semibold text-[14px] text-[#2D6A2D] truncate">
-                    {isHindi ? doc.labelHi : doc.label}
+                    {getDocLabel(doc)}
                   </h3>
                 </div>
-                {doc.autoExtracted && (
+                {getAutoExtracted(doc) && (
                   <div className="mt-1.5 space-y-0.5">
-                    {Object.entries(
-                      isHindi ? (doc.autoExtractedHi || doc.autoExtracted) : doc.autoExtracted
-                    )
+                    {Object.entries(getAutoExtracted(doc) || {})
                       .filter(([, v]) => v)
                       .map(([k, v]) => (
                         <p key={k} className="text-[11px] text-[#6B7280]">
@@ -637,20 +881,20 @@ export function ApplicationWizard() {
                     className="flex items-center gap-1 text-[#F87171] text-[11px] font-medium"
                   >
                     <Trash2 className="w-3 h-3" />
-                    {isHindi ? 'हटाएं' : 'Remove'}
+                    {t('remove')}
                   </button>
                   <button
                     onClick={() => triggerFileUpload(doc.key)}
                     className="flex items-center gap-1 text-[#F5A623] text-[11px] font-medium"
                   >
                     <Upload className="w-3 h-3" />
-                    {isHindi ? 'बदलें' : 'Change'}
+                    {t('change')}
                   </button>
                 </div>
               </div>
               <div className="bg-[#97BC62]/10 px-2 py-1 rounded-full flex-shrink-0">
                 <span className="text-[10px] font-semibold text-[#2D6A2D]">
-                  ✓ {isHindi ? 'अपलोड' : 'Done'}
+                  ✓ {t('done')}
                 </span>
               </div>
             </div>
@@ -659,11 +903,11 @@ export function ApplicationWizard() {
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[20px]">{doc.icon}</span>
                 <h3 className="font-semibold text-[14px] text-[#1C1C1E]">
-                  {isHindi ? doc.labelHi : doc.label}
+                  {getDocLabel(doc)}
                 </h3>
                 {doc.required && (
                   <span className="text-[10px] bg-[#F87171]/10 text-[#F87171] px-2 py-0.5 rounded-full font-medium">
-                    {isHindi ? 'आवश्यक' : 'Required'}
+                    {t('required')}
                   </span>
                 )}
               </div>
@@ -674,7 +918,7 @@ export function ApplicationWizard() {
                 >
                   <Camera className="w-5 h-5 text-[#2D6A2D]" />
                   <span className="text-[11px] text-[#1C1C1E] font-medium">
-                    {isHindi ? 'फ़ोटो लें' : 'Camera'}
+                    {t('camera')}
                   </span>
                 </button>
                 <button
@@ -683,7 +927,7 @@ export function ApplicationWizard() {
                 >
                   <Folder className="w-5 h-5 text-[#2D6A2D]" />
                   <span className="text-[11px] text-[#1C1C1E] font-medium">
-                    {isHindi ? 'गैलरी' : 'Gallery'}
+                    {t('gallery')}
                   </span>
                 </button>
                 <button
@@ -713,12 +957,10 @@ export function ApplicationWizard() {
     >
       <div className="mb-2">
         <h2 className="font-bold text-[22px] text-[#1C1C1E] mb-1">
-          {isHindi ? 'आवेदन फॉर्म भरें' : 'Fill Application Form'}
+          {t('fillApplicationForm')}
         </h2>
         <p className="text-[13px] text-[#6B7280]">
-          {isHindi
-            ? 'खाली फ़ील्ड भरें, बाकी प्रोफ़ाइल से ऑटो-फिल हुए हैं'
-            : 'Fill empty fields, rest auto-filled from your profile'}
+          {t('fillEmptyFields')}
         </p>
       </div>
 
@@ -729,16 +971,16 @@ export function ApplicationWizard() {
         </div>
         <div className="flex-1">
           <p className="text-[13px] text-[#2D6A2D] font-medium">
-            {isHindi
-              ? `प्रोफ़ाइल से ${autoFilledCount}/${totalFieldsCount} फ़ील्ड ऑटो-फिल हुए 🎉`
-              : `Auto-filled ${autoFilledCount}/${totalFieldsCount} fields from profile 🎉`}
+            {typeof translations.autoFilledFields[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+              ? (translations.autoFilledFields[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (f: number, t: number) => string)(autoFilledCount, totalFieldsCount)
+              : ''}
           </p>
         </div>
         <button
           onClick={() => navigate('/profile')}
           className="text-[11px] font-semibold text-[#F5A623] underline flex-shrink-0"
         >
-          {isHindi ? 'प्रोफ़ाइल' : 'Profile'}
+          {t('profile')}
         </button>
       </div>
 
@@ -776,16 +1018,14 @@ export function ApplicationWizard() {
           <AlertCircle className="w-5 h-5 text-[#F5A623] flex-shrink-0" />
           <div className="flex-1">
             <p className="text-[12px] text-[#1C1C1E] font-medium">
-              {isHindi
-                ? 'प्रोफ़ाइल पूरा करके और फ़ील्ड ऑटो-फिल करवाएं'
-                : 'Complete your profile to auto-fill more fields'}
+              {t('completeProfile')}
             </p>
           </div>
           <button
             onClick={() => navigate('/profile')}
             className="text-[11px] font-bold text-[#F5A623] bg-[#F5A623]/10 px-3 py-1.5 rounded-full flex-shrink-0"
           >
-            {isHindi ? 'अपडेट करें' : 'Update'}
+            {t('update')}
           </button>
         </div>
       )}
@@ -796,7 +1036,7 @@ export function ApplicationWizard() {
     return (
       <div>
         <label className="block text-[12px] text-[#6B7280] mb-1.5 font-medium">
-          {isHindi ? field.labelHi : field.label}
+          {getFieldLabel(field)}
         </label>
         <div className="relative">
           <input
@@ -804,24 +1044,23 @@ export function ApplicationWizard() {
             value={field.value}
             readOnly={!field.editable}
             onChange={(e) => field.editable && handleFieldChange(field.key, e.target.value)}
-            placeholder={isHindi ? field.placeholderHi : field.placeholder}
-            className={`w-full px-4 py-3 rounded-xl text-[14px] outline-none transition-all ${
-              field.editable
-                ? 'bg-white border-2 border-[#F5A623] focus:ring-2 focus:ring-[#F5A623]/30 text-[#1C1C1E]'
-                : 'bg-gray-50 border border-gray-100 text-[#1C1C1E]'
-            }`}
+            placeholder={getFieldPlaceholder(field)}
+            className={`w-full px-4 py-3 rounded-xl text-[14px] outline-none transition-all ${field.editable
+              ? 'bg-white border-2 border-[#F5A623] focus:ring-2 focus:ring-[#F5A623]/30 text-[#1C1C1E]'
+              : 'bg-gray-50 border border-gray-100 text-[#1C1C1E]'
+              }`}
           />
           {field.autoFilled && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <span className="text-[9px] bg-[#97BC62] text-white px-2 py-0.5 rounded-full font-semibold">
-                ✓ {isHindi ? 'प्रोफ़ाइल' : 'Profile'}
+                ✓ {t('fromProfile')}
               </span>
             </div>
           )}
           {field.editable && !field.value && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <span className="text-[9px] bg-[#F5A623]/10 text-[#F5A623] px-2 py-0.5 rounded-full font-semibold">
-                {isHindi ? 'भरें' : 'Fill'}
+                {t('fill')}
               </span>
             </div>
           )}
@@ -829,7 +1068,7 @@ export function ApplicationWizard() {
         {field.voiceEnabled && (
           <button className="flex items-center gap-1.5 mt-1.5 text-[11px] text-[#2D6A2D] font-medium">
             <Mic className="w-3 h-3" />
-            {isHindi ? 'बोलकर भरें' : 'Voice input'}
+            {t('voiceInput')}
           </button>
         )}
       </div>
@@ -840,7 +1079,7 @@ export function ApplicationWizard() {
   const renderReviewStep = () => {
     const reviewSections = [
       {
-        title: isHindi ? 'व्यक्तिगत जानकारी' : 'Personal Information',
+        title: t('personalInfo'),
         icon: <User className="w-4 h-4" />,
         fields: formFields.filter((f) =>
           ['name', 'fatherName', 'age', 'gender', 'mobile', 'aadhaar'].includes(f.key)
@@ -848,7 +1087,7 @@ export function ApplicationWizard() {
         editStep: 'form' as WizardStep,
       },
       {
-        title: isHindi ? 'भूमि एवं स्थान' : 'Land & Location',
+        title: t('landLocation'),
         icon: <MapPin className="w-4 h-4" />,
         fields: formFields.filter((f) =>
           ['state', 'district', 'village', 'landSize', 'ownership', 'surveyNumber'].includes(f.key)
@@ -856,7 +1095,7 @@ export function ApplicationWizard() {
         editStep: 'form' as WizardStep,
       },
       {
-        title: isHindi ? 'बैंक विवरण' : 'Bank Details',
+        title: t('bankDetails'),
         icon: <Building2 className="w-4 h-4" />,
         fields: formFields.filter((f) =>
           ['bankName', 'bankAccount', 'ifsc'].includes(f.key)
@@ -874,12 +1113,10 @@ export function ApplicationWizard() {
       >
         <div className="mb-2">
           <h2 className="font-bold text-[22px] text-[#1C1C1E] mb-1">
-            {isHindi ? 'आवेदन की समीक्षा करें' : 'Review Application'}
+            {t('reviewApplication')}
           </h2>
           <p className="text-[13px] text-[#6B7280]">
-            {isHindi
-              ? 'सभी जानकारी जांचें और जमा करें'
-              : 'Verify all information before submitting'}
+            {t('verifyBeforeSubmit')}
           </p>
         </div>
 
@@ -888,9 +1125,9 @@ export function ApplicationWizard() {
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="w-5 h-5" />
             <span className="font-bold text-[15px]">
-              {isHindi
-                ? `आवेदन ${completionPercent}% पूरा है`
-                : `Application ${completionPercent}% complete`}
+              {typeof translations.applicationComplete[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+                ? (translations.applicationComplete[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (p: number) => string)(completionPercent)
+                : ''}
             </span>
           </div>
           <div className="w-full bg-white/30 h-2 rounded-full overflow-hidden">
@@ -908,17 +1145,17 @@ export function ApplicationWizard() {
           <span className="text-[28px]">{scheme.logo}</span>
           <div>
             <p className="font-semibold text-[14px] text-[#1C1C1E]">
-              {isHindi ? scheme.hi : scheme.en}
+              {getSchemeName()}
             </p>
             <p className="text-[11px] text-[#6B7280]">
-              {isHindi ? 'आवेदन फॉर्म' : 'Application Form'}
+              {t('applicationForm')}
             </p>
           </div>
         </div>
 
         {/* Review Sections */}
         {reviewSections.map((section) => (
-          <div key={section.title} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div key={section.title as string} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-[#2D6A2D]/10 flex items-center justify-center text-[#2D6A2D]">
@@ -932,17 +1169,17 @@ export function ApplicationWizard() {
                 onClick={() => setCurrentStep(section.editStep)}
                 className="flex items-center gap-1 text-[#F5A623] text-[12px] font-semibold"
               >
-                ✏️ {isHindi ? 'बदलें' : 'Edit'}
+                ✏️ {t('edit')}
               </button>
             </div>
             <div className="space-y-2">
               {section.fields.map((field) => (
                 <div key={field.key} className="flex justify-between text-[13px]">
                   <span className="text-[#6B7280]">
-                    {isHindi ? field.labelHi : field.label}
+                    {getFieldLabel(field)}
                   </span>
                   <span className={`font-medium text-right max-w-[55%] ${field.value ? 'text-[#1C1C1E]' : 'text-[#F87171]'}`}>
-                    {field.value || (isHindi ? 'भरा नहीं' : 'Not filled')}
+                    {field.value || t('notFilled')}
                   </span>
                 </div>
               ))}
@@ -958,14 +1195,14 @@ export function ApplicationWizard() {
                 <FileText className="w-4 h-4" />
               </div>
               <h3 className="font-semibold text-[14px] text-[#2D6A2D]">
-                {isHindi ? 'दस्तावेज़' : 'Documents'}
+                {t('documents')}
               </h3>
             </div>
             <button
               onClick={() => setCurrentStep('documents')}
               className="flex items-center gap-1 text-[#F5A623] text-[12px] font-semibold"
             >
-              ✏️ {isHindi ? 'बदलें' : 'Edit'}
+              ✏️ {t('edit')}
             </button>
           </div>
           <div className="space-y-2">
@@ -977,16 +1214,16 @@ export function ApplicationWizard() {
                   <AlertCircle className="w-4 h-4 text-[#F87171] flex-shrink-0" />
                 )}
                 <span className={doc.uploaded ? 'text-[#1C1C1E]' : 'text-[#F87171]'}>
-                  {isHindi ? doc.labelHi : doc.label}
+                  {getDocLabel(doc)}
                 </span>
                 {doc.uploaded && doc.file && (
                   <span className="text-[10px] bg-[#97BC62]/10 text-[#2D6A2D] px-1.5 py-0.5 rounded-full font-medium ml-auto">
-                    {isHindi ? 'प्रोफ़ाइल से' : 'From profile'}
+                    {t('fromProfileTag')}
                   </span>
                 )}
                 {!doc.uploaded && (
                   <span className="text-[10px] bg-[#F87171]/10 text-[#F87171] px-1.5 py-0.5 rounded-full font-medium ml-auto">
-                    {isHindi ? 'गायब' : 'Missing'}
+                    {t('missing')}
                   </span>
                 )}
               </div>
@@ -998,9 +1235,7 @@ export function ApplicationWizard() {
         <div className="bg-[#F7F3EE] rounded-xl p-3 flex items-start gap-2">
           <Shield className="w-4 h-4 text-[#6B7280] mt-0.5 flex-shrink-0" />
           <p className="text-[11px] text-[#6B7280] leading-relaxed">
-            {isHindi
-              ? 'जमा करने पर, मैं पुष्टि करता/करती हूं कि सभी जानकारी सही है। गलत जानकारी देने पर आवेदन रद्द हो सकता है।'
-              : 'By submitting, I confirm all information is correct. Providing false information may lead to application rejection.'}
+            {t('disclaimer')}
           </p>
         </div>
 
@@ -1011,19 +1246,18 @@ export function ApplicationWizard() {
             className="flex-1 py-3 border border-gray-200 text-[#1C1C1E] rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 hover:bg-gray-50 active:scale-[0.97] transition-all"
           >
             <Eye className="w-4 h-4" />
-            {isHindi ? 'प्रीव्यू' : 'Preview'}
+            {t('preview')}
           </button>
           <button
             onClick={() => setCurrentStep('success')}
             disabled={completionPercent < 100}
-            className={`flex-1 py-3 rounded-xl font-bold text-[14px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all ${
-              completionPercent >= 100
-                ? 'bg-[#F5A623] text-white shadow-sm shadow-[#F5A623]/30'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
+            className={`flex-1 py-3 rounded-xl font-bold text-[14px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all ${completionPercent >= 100
+              ? 'bg-[#F5A623] text-white shadow-sm shadow-[#F5A623]/30'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              }`}
           >
             <CheckCircle className="w-4 h-4" />
-            {isHindi ? 'अभी जमा करें' : 'Submit Now'}
+            {t('submitNow')}
           </button>
         </div>
       </motion.div>
@@ -1055,12 +1289,12 @@ export function ApplicationWizard() {
         className="text-center"
       >
         <h2 className="font-bold text-[22px] text-[#1C1C1E] mb-1">
-          {isHindi ? 'आवेदन सफलतापूर्वक जमा हुआ!' : 'Application Submitted!'}
+          {t('applicationSubmitted')}
         </h2>
         <p className="text-[14px] text-[#6B7280] mb-6">
-          {isHindi
-            ? `${scheme.hi} के लिए आपका आवेदन दर्ज हो गया है`
-            : `Your application for ${scheme.en} has been recorded`}
+          {typeof translations.applicationRecorded[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+            ? (translations.applicationRecorded[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (s: string) => string)(getSchemeName())
+            : ''}
         </p>
       </motion.div>
 
@@ -1074,7 +1308,7 @@ export function ApplicationWizard() {
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[12px] text-[#6B7280] font-medium">
-              {isHindi ? 'संदर्भ संख्या' : 'Reference Number'}
+              {t('referenceNumber')}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -1102,7 +1336,7 @@ export function ApplicationWizard() {
                 exit={{ opacity: 0 }}
                 className="text-[11px] text-[#97BC62] font-medium text-center mt-2"
               >
-                ✓ {isHindi ? 'कॉपी हो गया!' : 'Copied to clipboard!'}
+                ✓ {t('copiedToClipboard')}
               </motion.p>
             )}
           </AnimatePresence>
@@ -1120,25 +1354,25 @@ export function ApplicationWizard() {
             </div>
             <div>
               <p className="font-semibold text-[14px] text-[#1C1C1E]">
-                {userData.name || (isHindi ? 'आवेदक' : 'Applicant')}
+                {userData.name || t('applicant')}
               </p>
               <p className="text-[11px] text-[#6B7280]">
                 {userData.district && userData.state
                   ? `${userData.district}, ${userData.state}`
-                  : isHindi ? scheme.hi : scheme.en}
+                  : getSchemeName()}
               </p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {userData.mobile && (
               <div className="bg-[#F7F3EE] rounded-lg px-3 py-2">
-                <p className="text-[10px] text-[#6B7280]">{isHindi ? 'मोबाइल' : 'Mobile'}</p>
+                <p className="text-[10px] text-[#6B7280]">{t('mobile')}</p>
                 <p className="text-[12px] font-medium text-[#1C1C1E]">+91 {userData.mobile}</p>
               </div>
             )}
             {userData.bankAccount && (
               <div className="bg-[#F7F3EE] rounded-lg px-3 py-2">
-                <p className="text-[10px] text-[#6B7280]">{isHindi ? 'खाता' : 'Account'}</p>
+                <p className="text-[10px] text-[#6B7280]">{t('account')}</p>
                 <p className="text-[12px] font-medium text-[#1C1C1E]">{maskBankAccount(userData.bankAccount)}</p>
               </div>
             )}
@@ -1151,10 +1385,10 @@ export function ApplicationWizard() {
             <span className="text-[20px]">⏱</span>
             <div>
               <p className="text-[14px] text-[#1C1C1E] font-semibold">
-                {isHindi ? 'अनुमानित समय: 15 कार्य दिवस' : 'Estimated: 15 working days'}
+                {t('estimatedTime')}
               </p>
               <p className="text-[11px] text-[#6B7280]">
-                {isHindi ? 'प्रसंस्करण का अनुमानित समय' : 'Estimated processing time'}
+                {t('estimatedProcessing')}
               </p>
             </div>
           </div>
@@ -1163,12 +1397,12 @@ export function ApplicationWizard() {
             <span className="text-[20px]">💬</span>
             <div>
               <p className="text-[14px] text-[#1C1C1E] font-semibold">
-                {isHindi ? 'SMS पुष्टि भेजी गई' : 'SMS Confirmation Sent'}
+                {t('smsConfirmation')}
               </p>
               <p className="text-[11px] text-[#6B7280]">
                 {userData.mobile
-                  ? `${isHindi ? 'आपके' : 'Sent to'} ${userData.mobile.slice(0, 4)}XXXXX${userData.mobile.slice(-1)}`
-                  : isHindi ? 'आपके रजिस्टर्ड नंबर पर' : 'To your registered number'}
+                  ? `${t('sentTo')} ${userData.mobile.slice(0, 4)}XXXXX${userData.mobile.slice(-1)}`
+                  : t('toRegisteredNumber')}
               </p>
             </div>
           </div>
@@ -1177,12 +1411,10 @@ export function ApplicationWizard() {
             <span className="text-[20px]">📋</span>
             <div>
               <p className="text-[14px] text-[#1C1C1E] font-semibold">
-                {isHindi ? 'अगला कदम' : 'Next Steps'}
+                {t('nextSteps')}
               </p>
               <p className="text-[11px] text-[#6B7280]">
-                {isHindi
-                  ? 'आवेदन की स्थिति "मेरे आवेदन" में ट्रैक करें'
-                  : 'Track status in "My Applications" section'}
+                {t('trackInApplications')}
               </p>
             </div>
           </div>
@@ -1195,21 +1427,21 @@ export function ApplicationWizard() {
             className="flex-1 py-3.5 bg-[#2D6A2D] text-white rounded-xl font-bold text-[14px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all"
           >
             <FileText className="w-4 h-4" />
-            {isHindi ? 'ट्रैक करें' : 'Track Application'}
+            {t('trackApplication')}
           </button>
           <button
             onClick={() => navigate('/dashboard')}
             className="flex-1 py-3.5 border border-gray-200 text-[#1C1C1E] rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 hover:bg-gray-50 active:scale-[0.97] transition-all"
           >
             <Home className="w-4 h-4" />
-            {isHindi ? 'होम' : 'Go Home'}
+            {t('goHome')}
           </button>
         </div>
 
         {/* Download receipt */}
         <button className="w-full py-3 bg-[#F7F3EE] text-[#2D6A2D] rounded-xl font-medium text-[13px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all">
           <Download className="w-4 h-4" />
-          {isHindi ? 'रसीद डाउनलोड करें' : 'Download Receipt'}
+          {t('downloadReceipt')}
         </button>
       </motion.div>
     </motion.div>
@@ -1236,7 +1468,7 @@ export function ApplicationWizard() {
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-[18px] text-[#1C1C1E]">
-                {isHindi ? 'आवेदन प्रीव्यू' : 'Application Preview'}
+                {t('applicationPreview')}
               </h3>
               <button
                 onClick={() => setShowPreview(false)}
@@ -1251,10 +1483,10 @@ export function ApplicationWizard() {
               <span className="text-[24px]">{scheme.logo}</span>
               <div>
                 <p className="font-semibold text-[14px] text-[#2D6A2D]">
-                  {isHindi ? scheme.hi : scheme.en}
+                  {getSchemeName()}
                 </p>
                 <p className="text-[11px] text-[#6B7280]">
-                  {isHindi ? 'आवेदन फॉर्म' : 'Application Form'}
+                  {t('applicationForm')}
                 </p>
               </div>
             </div>
@@ -1273,7 +1505,7 @@ export function ApplicationWizard() {
                   <p className="font-semibold text-[14px] text-[#1C1C1E]">{userData.name}</p>
                   {userData.aadhaar && (
                     <p className="text-[11px] text-[#6B7280]">
-                      {isHindi ? 'आधार:' : 'Aadhaar:'} {maskAadhaar(userData.aadhaar)}
+                      {t('aadhaar')} {maskAadhaar(userData.aadhaar)}
                     </p>
                   )}
                 </div>
@@ -1285,7 +1517,7 @@ export function ApplicationWizard() {
               {formFields.map((field) => (
                 <div key={field.key} className="flex justify-between text-[13px] py-1.5 border-b border-gray-50">
                   <span className="text-[#6B7280]">
-                    {isHindi ? field.labelHi : field.label}
+                    {getFieldLabel(field)}
                   </span>
                   <span className="font-medium text-[#1C1C1E] text-right max-w-[55%]">
                     {field.value || '—'}
@@ -1296,7 +1528,7 @@ export function ApplicationWizard() {
 
             {/* Documents */}
             <h4 className="font-semibold text-[13px] text-[#2D6A2D] mb-2">
-              {isHindi ? 'दस्तावेज़' : 'Documents'}
+              {t('documents')}
             </h4>
             <div className="space-y-1.5 mb-4">
               {documents.map((doc) => (
@@ -1306,7 +1538,7 @@ export function ApplicationWizard() {
                   ) : (
                     <AlertCircle className="w-4 h-4 text-[#F87171]" />
                   )}
-                  <span>{isHindi ? doc.labelHi : doc.label}</span>
+                  <span>{getDocLabel(doc)}</span>
                 </div>
               ))}
             </div>
@@ -1315,7 +1547,7 @@ export function ApplicationWizard() {
               onClick={() => setShowPreview(false)}
               className="w-full py-3 bg-[#F5A623] text-white rounded-xl font-bold text-[14px] active:scale-[0.97] transition-all"
             >
-              {isHindi ? 'बंद करें' : 'Close Preview'}
+              {t('closePreview')}
             </button>
           </motion.div>
         </motion.div>
@@ -1346,13 +1578,17 @@ export function ApplicationWizard() {
           </button>
           <div className="text-center">
             <p className="text-white/70 text-[11px] font-medium">
-              {isHindi ? scheme.hi : scheme.en}
+              {getSchemeName()}
             </p>
             {currentStep !== 'success' && (
               <p className="text-white text-[13px] font-semibold">
-                {isHindi
-                  ? `चरण ${currentStepIndex + 1}/4 — ${progressSteps[currentStepIndex].hi}`
-                  : `Step ${currentStepIndex + 1}/4 — ${progressSteps[currentStepIndex].en}`}
+                {typeof translations.step[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+                  ? (translations.step[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (c: number, t: number, n: string) => string)(
+                    currentStepIndex + 1,
+                    4,
+                    getProgressStepName(currentStepIndex)
+                  )
+                  : ''}
               </p>
             )}
           </div>
@@ -1362,14 +1598,13 @@ export function ApplicationWizard() {
         {/* Progress Bar */}
         {currentStep !== 'success' && (
           <div className="flex gap-1.5">
-            {progressSteps.map((_, index) => (
+            {progressStepsData.map((_, index) => (
               <div key={index} className="flex-1 relative">
                 <div
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    index <= currentStepIndex
-                      ? 'bg-[#F5A623]'
-                      : 'bg-white/20'
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${index <= currentStepIndex
+                    ? 'bg-[#F5A623]'
+                    : 'bg-white/20'
+                    }`}
                 />
                 {index === currentStepIndex && index < 3 && (
                   <div className="absolute -right-0.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[#F5A623] rounded-full border-2 border-white/50 animate-pulse" />
@@ -1382,14 +1617,13 @@ export function ApplicationWizard() {
         {/* Step Labels */}
         {currentStep !== 'success' && (
           <div className="flex justify-between mt-1.5">
-            {progressSteps.map((step, index) => (
+            {progressStepsData.map((step, index) => (
               <span
                 key={index}
-                className={`text-[9px] font-medium ${
-                  index <= currentStepIndex ? 'text-[#F5A623]' : 'text-white/30'
-                }`}
+                className={`text-[9px] font-medium ${index <= currentStepIndex ? 'text-[#F5A623]' : 'text-white/30'
+                  }`}
               >
-                {isHindi ? step.hi : step.en}
+                {isMarathi ? step.mr : isHindi ? step.hi : step.en}
               </span>
             ))}
           </div>
@@ -1413,34 +1647,31 @@ export function ApplicationWizard() {
                 onClick={goBack}
                 className="px-6 py-3.5 border border-gray-200 text-[#1C1C1E] rounded-xl font-semibold text-[14px] hover:bg-gray-50 active:scale-[0.97] transition-all"
               >
-                {isHindi ? 'पीछे' : 'Back'}
+                {t('back')}
               </button>
             )}
             <button
               onClick={goNext}
               disabled={!canProceed}
-              className={`flex-1 py-3.5 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all ${
-                canProceed
-                  ? 'bg-[#F5A623] text-white shadow-sm shadow-[#F5A623]/30'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
+              className={`flex-1 py-3.5 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2 active:scale-[0.97] transition-all ${canProceed
+                ? 'bg-[#F5A623] text-white shadow-sm shadow-[#F5A623]/30'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
             >
-              {isHindi ? 'आगे बढ़ें' : 'Continue'}
+              {t('continue')}
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
           {!canProceed && currentStep === 'documents' && (
             <p className="text-center text-[11px] text-[#FB923C] mt-2 font-medium">
-              {isHindi
-                ? `${totalDocsCount - uploadedDocsCount} दस्तावेज़ बाकी हैं`
-                : `${totalDocsCount - uploadedDocsCount} documents remaining`}
+              {typeof translations.documentsRemaining[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] === 'function'
+                ? (translations.documentsRemaining[isMarathi ? 'mr' : isHindi ? 'hi' : 'en'] as (c: number) => string)(totalDocsCount - uploadedDocsCount)
+                : ''}
             </p>
           )}
           {!canProceed && currentStep === 'form' && (
             <p className="text-center text-[11px] text-[#FB923C] mt-2 font-medium">
-              {isHindi
-                ? 'सभी खाली फ़ील्ड भरें'
-                : 'Please fill all required fields'}
+              {t('fillRequiredFields')}
             </p>
           )}
         </div>

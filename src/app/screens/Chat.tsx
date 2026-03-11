@@ -99,19 +99,7 @@ export default function Chat(): JSX.Element {
   const { userData } = useUser();
   const isHindi = language === 'hi';
 
-  // State
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'bot',
-      text:
-        `Hello ${userData.name || 'Farmer'}! 👋\n\nI'm Krishi Mitra AI, your agricultural assistant.\n\nYou can ask me about:\n• Crop diseases & solutions\n• Weather-based farming tips\n• Government schemes\n• Soil health & fertilizers\n• Market prices`,
-      textHi:
-        `नमस्ते ${userData.name || 'किसान भाई'}! 👋\n\nमैं कृषि मित्र AI हूँ, आपका कृषि सहायक।\n\nआप मुझसे पूछ सकते हैं:\n• फसल रोग और समाधान\n• मौसम आधारित खेती सुझाव\n• सरकारी योजनाएं\n• मृदा स्वास्थ्य और उर्वरक\n• बाज़ार भाव`,
-      timestamp: new Date(),
-    },
-  ]);
-
+  // ─── State ──────────────────────────────────────────────────
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -121,10 +109,21 @@ export default function Chat(): JSX.Element {
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
 
+  /* NEW STATE */
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'bot',
+      text: `Hello ${userData.name || 'Farmer'}! 👋\n\nI'm Krishi Mitra AI, your agricultural assistant.\n\nYou can ask me about:\n• Crop diseases & solutions\n• Weather-based farming tips\n• Government schemes\n• Soil health & fertilizers\n• Market prices`,
+      textHi: `नमस्ते ${userData.name || 'किसान भाई'}! 👋\n\nमैं कृषि मित्र AI हूँ, आपका कृषि सहायक।\n\nआप मुझसे पूछ सकते हैं:\n• फसल रोग और समाधान\n• मौसम आधारित खेती सुझाव\n• सरकारी योजनाएं\n• मृदा स्वास्थ्य और उर्वरक\n• बाज़ार भाव`,
+      timestamp: new Date(),
+    },
+  ]);
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-
-  // speech refs
   const recognitionRef = useRef<any>(null);
   const speechVoicesRef = useRef<SpeechSynthesisVoice[] | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -144,7 +143,6 @@ export default function Chat(): JSX.Element {
   // Load available voices (for TTS)
   useEffect(() => {
     if (!('speechSynthesis' in window)) return;
-
     const load = () => {
       const vs = window.speechSynthesis.getVoices();
       if (vs && vs.length > 0) {
@@ -154,11 +152,8 @@ export default function Chat(): JSX.Element {
     };
     load();
     window.speechSynthesis.onvoiceschanged = load;
-
     return () => {
-      try {
-        window.speechSynthesis.onvoiceschanged = null;
-      } catch { }
+      try { window.speechSynthesis.onvoiceschanged = null; } catch { }
     };
   }, []);
 
@@ -167,6 +162,7 @@ export default function Chat(): JSX.Element {
     if (!ttsEnabled && 'speechSynthesis' in window) {
       try {
         window.speechSynthesis.cancel();
+        setIsSpeaking(false);
       } catch { }
     }
   }, [ttsEnabled]);
@@ -181,7 +177,6 @@ export default function Chat(): JSX.Element {
       (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     if (!SpeechRecognition) return;
 
-    // Stop any existing instance before recreating
     if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch { }
       recognitionRef.current = null;
@@ -190,19 +185,15 @@ export default function Chat(): JSX.Element {
     const recognition = new SpeechRecognition();
     recognition.lang = isHindi ? 'hi-IN' : 'en-IN';
     recognition.continuous = false;
-    recognition.interimResults = true; // show interim so it feels responsive
+    recognition.interimResults = true;
 
     recognition.onstart = () => setIsListening(true);
-
     recognition.onend = () => setIsListening(false);
-
     recognition.onerror = (e: any) => {
-      // 'aborted' fires when we call .stop() manually — ignore it
       if (e.error === 'aborted') return;
       console.error('Speech recognition error:', e.error);
       setIsListening(false);
     };
-
     recognition.onresult = (event: any) => {
       let transcript = '';
       for (let i = 0; i < event.results.length; i++) {
@@ -219,14 +210,13 @@ export default function Chat(): JSX.Element {
     };
   }, [isHindi]);
 
-  // ─── Helpers: time formatting
+  // ─── Helpers ────────────────────────────────────────────────
   const formatTime = (date: Date) =>
     date.toLocaleTimeString(isHindi ? 'hi-IN' : 'en-IN', {
       hour: '2-digit',
       minute: '2-digit',
     });
 
-  // ─── Text-to-Speech: pick voice and speak
   const detectLanguageFromText = (text: string) => {
     const devanagari = /[\u0900-\u097F]/;
     return devanagari.test(text) ? 'hi-IN' : 'en-US';
@@ -243,25 +233,30 @@ export default function Chat(): JSX.Element {
     return vs[0];
   };
 
+  // ─── speakText (with isSpeaking indicator) ──────────────────
   const speakText = (text: string) => {
     if (!ttsEnabled) return;
     if (!('speechSynthesis' in window)) return;
 
-    try {
-      window.speechSynthesis.cancel();
-    } catch { }
+    try { window.speechSynthesis.cancel(); } catch { }
 
     const utter = new SpeechSynthesisUtterance(text);
     const lang = detectLanguageFromText(text);
     const voice = pickVoiceForLang(lang);
+
     utter.lang = lang;
     if (voice) utter.voice = voice;
     utter.rate = 1;
     utter.pitch = 1;
+
+    utter.onstart = () => setIsSpeaking(true);
+    utter.onend = () => setIsSpeaking(false);
+    utter.onerror = () => setIsSpeaking(false);
+
     window.speechSynthesis.speak(utter);
   };
 
-  // ─── Voice input handler (toggle)
+  // ─── Voice input handler ────────────────────────────────────
   const handleVoiceInput = useCallback(() => {
     const isSecure =
       window.location.hostname === 'localhost' || window.location.protocol === 'https:';
@@ -287,11 +282,10 @@ export default function Chat(): JSX.Element {
     if (isListening) {
       try { recognition.stop(); } catch { }
     } else {
-      setInputText(''); // clear previous text before new recording
+      setInputText('');
       try {
         recognition.start();
       } catch (e: any) {
-        // InvalidStateError means it's already running — stop it
         if (e.name === 'InvalidStateError') {
           try { recognition.stop(); } catch { }
         } else {
@@ -301,10 +295,11 @@ export default function Chat(): JSX.Element {
     }
   }, [isHindi, isListening]);
 
-  // ─── Replay single bot message (TTS) — forces speak even if TTS toggled off
+  // ─── Replay single bot message (TTS) ────────────────────────
   const replayMessage = (text: string) => {
     if (!('speechSynthesis' in window)) return;
     try { window.speechSynthesis.cancel(); } catch { }
+
     const utter = new SpeechSynthesisUtterance(text);
     const lang = detectLanguageFromText(text);
     const voice = pickVoiceForLang(lang);
@@ -312,10 +307,13 @@ export default function Chat(): JSX.Element {
     if (voice) utter.voice = voice;
     utter.rate = 1;
     utter.pitch = 1;
+    utter.onstart = () => setIsSpeaking(true);
+    utter.onend = () => setIsSpeaking(false);
+    utter.onerror = () => setIsSpeaking(false);
     window.speechSynthesis.speak(utter);
   };
 
-  // ─── Backend / Chat logic (abortable)
+  // ─── Send message ────────────────────────────────────────────
   const handleSend = useCallback(
     async (customText?: string) => {
       const textToSend = customText ?? inputText;
@@ -333,9 +331,7 @@ export default function Chat(): JSX.Element {
       setIsLoading(true);
       setShowQuickActions(false);
 
-      try {
-        abortControllerRef.current?.abort();
-      } catch { }
+      try { abortControllerRef.current?.abort(); } catch { }
       const ac = new AbortController();
       abortControllerRef.current = ac;
 
@@ -442,7 +438,7 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
     [inputText, isLoading, messages, isHindi],
   );
 
-  // ─── Quick action handler
+  // ─── Quick action handler ────────────────────────────────────
   const handleQuickAction = useCallback(
     (action: QuickAction) => {
       const query = isHindi ? action.queryHi : action.query;
@@ -451,7 +447,7 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
     [handleSend, isHindi],
   );
 
-  // ─── Copy / Share / Clear handlers
+  // ─── Copy / Share / Clear ────────────────────────────────────
   const handleCopy = useCallback((text: string, id: string) => {
     navigator.clipboard?.writeText(text);
     setCopiedId(id);
@@ -480,9 +476,10 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
     setShowMenu(false);
   }, [userData.name]);
 
-  // ─── UI render
+  // ─── UI ──────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#F7F3EE] flex flex-col">
+
       {/* Header */}
       <div className="bg-gradient-to-b from-[#1A3C1A] to-[#2D6A2D] pt-10 pb-4 px-4 sticky top-0 z-20">
         <div className="flex items-center justify-between">
@@ -517,7 +514,6 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
             </div>
           </div>
 
-          {/* Right side: TTS toggle + menu */}
           <div className="flex items-center gap-2">
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -758,7 +754,6 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
       {/* Input Area */}
       <div className="bg-white border-t border-gray-100 px-4 py-3 pb-20">
         <div className="flex items-center gap-2">
-          {/* Voice Button */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={handleVoiceInput}
@@ -807,7 +802,6 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
               exit={{ opacity: 0 }}
               className="flex items-center justify-center gap-2 mt-2"
             >
-              {/* Animated sound bars */}
               <div className="flex items-end gap-0.5 h-4">
                 {[0, 0.15, 0.3, 0.15, 0].map((delay, i) => (
                   <motion.span
@@ -828,6 +822,23 @@ Keep answers practical, simple, and actionable. Use bullet points for lists.`,
       </div>
 
       <BottomNav />
+
+      {/* AI Speaking Indicator */}
+      <AnimatePresence>
+        {isSpeaking && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="fixed bottom-24 right-5 z-40"
+          >
+            <div className="w-14 h-14 bg-[#F5A623] rounded-full flex items-center justify-center shadow-xl relative">
+              <span className="absolute w-full h-full rounded-full bg-[#F5A623] animate-ping opacity-40" />
+              <Volume2 className="w-6 h-6 text-white relative z-10" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {showMenu && (
         <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
