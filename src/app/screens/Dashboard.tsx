@@ -10,7 +10,7 @@ import { useUser } from '../../context/UserContext';
 export function Dashboard() {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { userData, loggedInName, getProfileCompletion, getPendingTasks } = useUser();
+  const { userData, getProfileCompletion, getPendingTasks } = useUser();
   const isHindi = language === 'hi';
   const isMarathi = language === 'mr';
 
@@ -55,15 +55,12 @@ export function Dashboard() {
   };
 
 
-  // Get user's first name — prefer loggedInName (set at signup/login), then userData.name
+  // Get user's first name
   const getFirstName = () => {
-    const fullName = loggedInName || userData.name;
-    if (!fullName) return localize('Farmer', 'किसान', 'शेतकरी');
-    return fullName.split(' ')[0];
+    if (!userData.name) return localize('Farmer', 'किसान', 'शेतकरी');
+    const firstName = userData.name.split(' ')[0];
+    return firstName;
   };
-
-  // Detect if this is a freshly-registered user (no profile data filled yet)
-  const isNewUser = !userData.age && !userData.mobile;
 
 
   // Get matched schemes count based on profile
@@ -88,6 +85,7 @@ export function Dashboard() {
       amountMr: '₹6,000/वर्ष',
       type: localize('Central Govt', 'केंद्र सरकार', 'केंद्र सरकार'),
       deadline: localize('March 31', '31 मार्च', '31 मार्च'),
+      deadlineMr: '31 मार्च',
       daysLeft: 15,
       docsRequired: 3,
       eligible: true,
@@ -104,6 +102,7 @@ export function Dashboard() {
       amountMr: '₹2 लाखांपर्यंत',
       type: localize('Central Govt', 'केंद्र सरकार', 'केंद्र सरकार'),
       deadline: localize('Feb 28', '28 फरवरी', '28 फेब्रुवारी'),
+      deadlineMr: '28 फेब्रुवारी',
       daysLeft: 7,
       docsRequired: 4,
       eligible: true,
@@ -120,6 +119,7 @@ export function Dashboard() {
       amountMr: 'मोफत तपासणी',
       type: localize('State Govt', 'राज्य सरकार', 'राज्य सरकार'),
       deadline: localize('March 15', '15 मार्च', '15 मार्च'),
+      deadlineMr: '15 मार्च',
       daysLeft: 21,
       docsRequired: 2,
       eligible: true,
@@ -170,7 +170,7 @@ export function Dashboard() {
       color: 'border-[#FB923C]',
       dotColor: 'bg-[#F87171]',
       action: localize('Apply Now', 'अभी आवेदन करें', 'आता अर्ज करा'),
-      path: '/schemes/pm-kisan',
+      path: '/scheme-matcher/pm-kisan',
     },
     {
       id: 2,
@@ -266,13 +266,9 @@ export function Dashboard() {
                 )}
               </div>
               <div>
-                <p className="text-[#97BC62] text-[13px] mb-0.5">
-                  {isNewUser
-                    ? localize('Welcome', 'स्वागत है', 'स्वागत आहे')
-                    : getGreeting()}
-                </p>
+                <p className="text-[#97BC62] text-[13px] mb-0.5">{getGreeting()}</p>
                 <h2 className="text-white font-bold text-[20px]">
-                  {getFirstName()} {localize('', 'जी', 'जी')}! {isNewUser ? '🎉' : '👋'}
+                  {getFirstName()} {localize('', 'जी', 'जी')}! 👋
                 </h2>
               </div>
             </div>
@@ -526,7 +522,7 @@ export function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 + index * 0.1 }}
-              onClick={() => navigate(`/schemes/${scheme.id}`)}
+              onClick={() => navigate(`/scheme-matcher/${scheme.id}`)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 cursor-pointer"
@@ -563,7 +559,7 @@ export function Dashboard() {
                       </span>
                       <span className="text-[11px] text-[#6B7280] flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {localize(scheme.amount, scheme.amountHi, scheme.amountMr)}
+                        {scheme.deadline}
                       </span>
                     </div>
                     <div className={`px-2 py-1 rounded-lg text-[10px] font-semibold ${scheme.daysLeft <= 7

@@ -70,6 +70,13 @@ export function OnboardingFinancial() {
       return;
     }
     await updateUserData({ ...form });
+    // Also persist to backend
+    try {
+      const { saveProfile } = await import('../../utils/api');
+      await saveProfile(form);
+    } catch (err) {
+      console.warn('Could not save financial info to backend:', err);
+    }
     navigate('/dashboard');
   };
 

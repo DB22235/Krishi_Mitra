@@ -127,16 +127,12 @@ import { motion } from 'motion/react';
 import { useLanguage } from '../../context/LanguageContext';
 
 
-
-
 export function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
   const { language } = useLanguage();
   const isHindi = language === 'hi';
   const isMarathi = language === 'mr';
-
-
 
 
   const navItems = [
@@ -185,8 +181,6 @@ export function BottomNav() {
   ];
 
 
-
-
   // Helper to get label based on language
   const getLabel = (item: typeof navItems[0]) => {
     if (isMarathi) return item.labelMr;
@@ -195,15 +189,12 @@ export function BottomNav() {
   };
 
 
-
-
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 h-20 flex items-center justify-around px-2 z-50 safe-area-bottom">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = location.pathname === item.path ||
-          (item.path === '/schemes' && location.pathname.startsWith('/schemes/'));
-
+          (item.path === '/schemes' && (location.pathname.startsWith('/schemes/') || location.pathname.startsWith('/scheme-matcher/')));
 
         return (
           <motion.button
@@ -221,8 +212,6 @@ export function BottomNav() {
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             )}
-
-
 
 
             {/* Icon Container */}
@@ -243,8 +232,6 @@ export function BottomNav() {
                 strokeWidth={isActive ? 2.5 : 2}
               />
             </motion.div>
-
-
 
 
             {/* Label */}

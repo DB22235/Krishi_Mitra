@@ -193,7 +193,7 @@ export function OnboardingFarmDetails() {
     }
 
     // Save to context
-    await updateUserData({
+    const updatedData = {
       landOwnership: formData.landOwnership,
       landSize: formData.landSize,
       landUnit: formData.landUnit,
@@ -201,7 +201,16 @@ export function OnboardingFarmDetails() {
       selectedSeasons: formData.selectedSeasons,
       irrigation: formData.irrigation,
       state: formData.state,
-    });
+    };
+    await updateUserData(updatedData);
+
+    // Persist to backend
+    try {
+      const { saveProfile } = await import('../../utils/api');
+      await saveProfile(updatedData);
+    } catch (err) {
+      console.warn('Could not save farm details to backend:', err);
+    }
 
     navigate('/onboarding/financial');
   };

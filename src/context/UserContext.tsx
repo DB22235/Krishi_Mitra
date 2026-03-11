@@ -1,5 +1,5 @@
-// src/context/UserContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { loadProfile } from '../utils/api';
 
 export interface UserData {
   // Basic Info (from OnboardingProfile)
@@ -57,10 +57,9 @@ interface UserContextType {
   userData: UserData;
   updateUserData: (data: Partial<UserData>) => void;
   clearUserData: () => void;
-  loggedInName: string;
+  syncWithBackend: () => Promise<void>;
   getProfileCompletion: () => number;
   getPendingTasks: () => { en: string; hi: string; mr: string }[];
-  syncWithBackend: () => Promise<void>;
 }
 
 const defaultUserData: UserData = {
@@ -106,94 +105,87 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') {
-          let documents = Array.isArray(parsed.documents) ? parsed.documents : defaultUserData.documents;
-          
-          // Migrate existing documents to include nameMr if missing
-          if (Array.isArray(documents)) {
-            const mrNames: Record<string, string> = {
-              aadhaar: 'आधार कार्ड',
-              land: 'जमीन नोंदी',
-              bank: 'बँक पासबुक',
-              photo: 'पासपोर्ट फोटो',
-            };
-            documents = documents.map((doc: DocumentInfo) => ({
-              ...doc,
-              nameMr: doc.nameMr || mrNames[doc.id] || doc.name,
-            }));
-          }
-          return { ...defaultUserData, ...parsed, documents };
+        // Ensure documents is always an array (could be an object from backend/corrupted data)
+        if (parsed.documents && Array.isArray(parsed.documents)) {
+          const mrNames: Record<string, string> = {
+            aadhaar: 'आधार कार्ड',
+            land: 'जमीन नोंदी',
+            bank: 'बँक पासबुक',
+            photo: 'पासपोर्ट फोटो',
+          };
+          parsed.documents = parsed.documents.map((doc: DocumentInfo) => ({
+            ...doc,
+            nameMr: doc.nameMr || mrNames[doc.id] || doc.name,
+          }));
+        } else {
+          // Reset to default if documents is not an array
+          parsed.documents = defaultUserData.documents;
         }
-      } catch (e) {
-        console.error('Error parsing saved user-data:', e);
+        return { ...defaultUserData, ...parsed };
+      } catch {
+        // If parsing fails, use defaults
+        return defaultUserData;
       }
     }
     return defaultUserData;
   });
 
-  // Derive the logged-in user's name: prefer context userData.name, then localStorage user-name
-  const loggedInName: string =
-    userData.name || localStorage.getItem('user-name') || '';
-
   useEffect(() => {
     localStorage.setItem('user-data', JSON.stringify(userData));
-    // Keep user-name in sync with context
-    if (userData.name) {
-      localStorage.setItem('user-name', userData.name);
-    }
   }, [userData]);
 
-  const updateUserData = async (data: Partial<UserData>) => {
-    // Update local state first for immediate UI response
-    const newData = { ...userData, ...data };
-    setUserData(newData);
-
-    // Sync to backend if token exists
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const { saveProfile } = await import('../utils/api');
-        
-        // Transform data to match backend ProfileData if documents are present
-        const backendData: any = { ...data };
-        if (data.documents) {
-          const docMap: Record<string, string> = {};
-          data.documents.forEach(doc => {
-            if (doc.file) docMap[doc.id] = doc.file;
-          });
-          backendData.documents = docMap;
-        }
-
-        await saveProfile(backendData);
-        console.log('✅ Changes synced to backend');
-      } catch (err) {
-        console.error('❌ Failed to sync with backend:', err);
-      }
-    }
-  };
-
-  const syncWithBackend = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const { loadProfile } = await import('../utils/api');
-      const response = await loadProfile();
-      if (response.exists && response.profile) {
-        setUserData((prev) => ({ ...prev, ...response.profile }));
-        console.log('✅ User data synced from backend');
-      }
-    } catch (err) {
-      console.error('❌ Failed to load profile from backend:', err);
-    }
+  const updateUserData = (data: Partial<UserData>) => {
+    setUserData((prev) => ({ ...prev, ...data }));
   };
 
   const clearUserData = () => {
+    localStorage.removeItem('user-data');
     localStorage.removeItem('token');
     localStorage.removeItem('user-name');
-    localStorage.removeItem('user-data');
     setUserData(defaultUserData);
   };
+
+  // Sync local state with the backend profile (call after login/signup)
+  const syncWithBackend = useCallback(async () => {
+    try {
+      const data = await loadProfile();
+      if (data.exists && data.profile) {
+        const p = data.profile;
+        const backendData: Partial<UserData> = {};
+        if (p.name) backendData.name = p.name;
+        if (p.mobile) backendData.mobile = p.mobile;
+        if (p.age) backendData.age = String(p.age);
+        if (p.gender) backendData.gender = p.gender;
+        if (p.state) backendData.state = p.state;
+        if (p.district) backendData.district = p.district;
+        if (p.village) backendData.village = p.village;
+        if (p.profileImage) backendData.profileImage = p.profileImage;
+        if (p.category) backendData.category = p.category;
+        if (p.annualIncome) backendData.annualIncome = p.annualIncome;
+        if (p.incomeSource) backendData.incomeSource = p.incomeSource;
+        if (p.bankName) backendData.bankName = p.bankName;
+        if (p.bankAccount) backendData.bankAccount = p.bankAccount;
+        if (p.ifscCode) backendData.ifscCode = p.ifscCode;
+        if (p.pmKisanStatus) backendData.pmKisanStatus = p.pmKisanStatus;
+        if (p.landSize !== undefined) backendData.landSize = p.landSize;
+        if (p.landUnit) backendData.landUnit = p.landUnit;
+        if (p.landOwnership) backendData.landOwnership = p.landOwnership;
+        if (p.soilType) backendData.soilType = p.soilType;
+        if (p.livestock) backendData.livestock = p.livestock;
+        if (Array.isArray(p.selectedCrops)) backendData.selectedCrops = p.selectedCrops;
+        if (Array.isArray(p.selectedSeasons)) backendData.selectedSeasons = p.selectedSeasons;
+        if (Array.isArray(p.irrigation)) backendData.irrigation = p.irrigation;
+        if (p.aadhaar) backendData.aadhaar = p.aadhaar;
+        if (p.aadhaarVerified !== undefined) backendData.aadhaarVerified = p.aadhaarVerified;
+        if (p.memberSince) backendData.memberSince = p.memberSince;
+
+        setUserData((prev) => ({ ...prev, ...backendData }));
+      }
+    } catch (err) {
+      console.warn('Could not sync profile from backend:', err);
+      // Not critical — local data is still usable
+    }
+  }, []);
 
   const getProfileCompletion = (): number => {
     let total = 0;
@@ -263,7 +255,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ userData, updateUserData, clearUserData, loggedInName, getProfileCompletion, getPendingTasks, syncWithBackend }}>
+    <UserContext.Provider value={{ userData, updateUserData, clearUserData, syncWithBackend, getProfileCompletion, getPendingTasks }}>
       {children}
     </UserContext.Provider>
   );

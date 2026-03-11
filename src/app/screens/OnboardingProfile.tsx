@@ -305,12 +305,21 @@ export function OnboardingProfile() {
     }
 
     // Save to context
-    await updateUserData({
+    const updatedData = {
       name: formData.name,
       age: formData.age,
       gender: formData.gender,
       mobile: formData.mobile,
-    });
+    };
+    await updateUserData(updatedData);
+
+    // Persist to backend
+    try {
+      const { saveProfile } = await import('../../utils/api');
+      await saveProfile(updatedData);
+    } catch (err) {
+      console.warn('Could not save profile to backend:', err);
+    }
 
     navigate('/onboarding/farm-details');
   };

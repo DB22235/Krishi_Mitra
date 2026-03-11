@@ -104,7 +104,7 @@ export function OnboardingDocuments() {
     });
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     setSaving(true);
     // Persist uploaded documents back into UserContext
     const updatedDocs = userData.documents.map((doc) => ({
@@ -112,8 +112,26 @@ export function OnboardingDocuments() {
       status: uploads[doc.id] ? ('uploaded' as const) : doc.status,
       file: uploads[doc.id] || doc.file,
     }));
-    updateUserData({ documents: updatedDocs });
-    setTimeout(() => navigate('/dashboard'), 400);
+    await updateUserData({ documents: updatedDocs });
+
+    // Format docs for backend (Record<string, string>)
+    const docsForBackend: Record<string, string> = {};
+    updatedDocs.forEach((d) => {
+      if (d.status === 'uploaded' && d.file) {
+        docsForBackend[d.id] = d.file as string; // assuming file is base64 string
+      }
+    });
+
+    // Persist to backend
+    try {
+      const { saveProfile } = await import('../../utils/api');
+      await saveProfile({ documents: docsForBackend });
+    } catch (err) {
+      console.warn('Could not save documents to backend:', err);
+    }
+
+    setSaving(false);
+    navigate('/dashboard');
   };
 
   return (
