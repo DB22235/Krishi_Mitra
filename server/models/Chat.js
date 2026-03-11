@@ -1,4 +1,3 @@
-// server/models/Chat.js
 import mongoose from "mongoose";
 
 const MessageSchema = new mongoose.Schema(
@@ -37,5 +36,6 @@ const ChatSchema = new mongoose.Schema({
   },
 });
 
-const Chat = mongoose.model("Chat", ChatSchema);
+// Guard against duplicate model registration
+const Chat = mongoose.models.Chat || mongoose.model("Chat", ChatSchema);
 export default Chat;

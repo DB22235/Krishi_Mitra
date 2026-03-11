@@ -6,9 +6,11 @@ import { SignUp } from "./screens/SignUp";
 import { Login } from "./screens/Login";
 import { OnboardingProfile } from "./screens/OnboardingProfile";
 import { OnboardingFarmDetails } from "./screens/OnboardingFarmDetails";
+import { OnboardingFinancial } from "./screens/OnboardingFinancial";
 import { Dashboard } from "./screens/Dashboard";
+import { CommunityEngagement } from "./screens/CommunityEngagement";
 
-import  Chat  from "./screens/Chat";
+import Chat from "./screens/Chat";
 
 
 
@@ -45,6 +47,10 @@ export const router = createBrowserRouter([
         Component: OnboardingFarmDetails,
       },
       {
+        path: "/onboarding/financial",
+        Component: OnboardingFinancial,
+      },
+      {
         path: "/dashboard",
         Component: Dashboard,
       },
@@ -75,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         Component: Profile,
+      },
+      {
+        path: "/community",
+        Component: CommunityEngagement,
       },
     ],
   },

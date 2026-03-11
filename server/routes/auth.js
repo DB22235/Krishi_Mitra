@@ -1,13 +1,15 @@
-// server/routes/auth.js
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import User from "../models/User.js";
+import FarmerProfile from "../models/FarmerProfile.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+if (!process.env.JWT_SECRET) {
+  console.error("❌ CRITICAL: JWT_SECRET is not defined in environment variables.");
+}
 
+const router = express.Router();
 
 /* ── SIGNUP ──────────────────────────────────────────────────── */
 router.post("/signup", async (req, res) => {
@@ -24,8 +26,19 @@ router.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({ name, email, password: hashedPassword });
+
+    // Create an initial profile for the new user
+    try {
+      await FarmerProfile.create({
+        userId: user._id,
+        name: user.name,
+      });
+      console.log(`✅ Initial profile created for ${user.email}`);
+    } catch (profileError) {
+      console.warn(`⚠️ Could not create initial profile for ${user.email}:`, profileError.message);
+      // We don't fail the signup if profile creation fails, as it can be upserted later
+    }
 
     const token = jwt.sign(
       { id: user._id },
@@ -43,7 +56,6 @@ router.post("/signup", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
-
 
 /* ── SIGNIN ──────────────────────────────────────────────────── */
 router.post("/signin", async (req, res) => {
@@ -81,8 +93,7 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-
-/* ── GET PROFILE ─────────────────────────────────────────────── */
+/* ── GET CURRENT USER ────────────────────────────────────────── */
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -96,5 +107,5 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
-
+console.log("✅ auth routes loaded");
 export default router;
