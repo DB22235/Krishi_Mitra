@@ -6,37 +6,53 @@ import cookieParser from "cookie-parser";
 import axios from "axios";
 import chatRoutes from "./routes/chat.js";
 
-import connectDB from "./config/db.js";         // config/db.js (above)
-import authRoutes from "./routes/auth.js";      // assume you have this (ESM)
-import ChatModel from "./models/Chat.js";       // optional: to store chat history
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/auth.js";
+import ChatModel from "./models/Chat.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+
+// ✅ Allow multiple origins: local dev + deployed Vercel frontend
+const allowedOrigins = [
+  process.env.FRONTEND_ORIGIN,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:5000",
+].filter(Boolean);
 
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use(cors({
-  origin: FRONTEND_ORIGIN,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (Postman, curl, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    console.warn(`CORS blocked request from origin: ${origin}`);
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true,
 }));
 
 // Connect to DB
 connectDB();
 
-// Mount auth routes (if present)
-try {
-  app.use("/api/auth", authRoutes);
-} catch (err) {
-  console.warn("Auth routes not mounted. Ensure ./routes/auth.js exists.");
-}
-  app.use("/api/chat", chatRoutes);
-// Healthcheck
-app.get("/api/health", (req, res) => res.json({ ok: true, server: "running" }));
+// Mount auth routes
+app.use("/api/auth", authRoutes);
 
-// Chat endpoint: forwards to Groq + optional chat storage
+// Mount chat routes
+app.use("/api/chat", chatRoutes);
+
+// Healthcheck
+app.get("/api/health", (req, res) =>
+  res.json({ ok: true, server: "running", timestamp: new Date().toISOString() })
+);
+
+// ─── Main AI Chat endpoint ──────────────────────────────────────────────────
 app.post("/chat", async (req, res) => {
   try {
     const { messages, save = true, userId = null, sessionName = null } = req.body;
@@ -50,14 +66,17 @@ app.post("/chat", async (req, res) => {
       return res.status(500).json({ error: "Server misconfiguration: missing GROQ_API_KEY" });
     }
 
-    // Optional: save incoming messages to DB before sending to LLM
+    // Save incoming messages to DB before sending to LLM
     let chatDoc = null;
     if (save) {
       try {
         chatDoc = await ChatModel.create({
           userId,
           sessionName,
-          messages: messages.map(m => ({ role: m.role || "user", content: m.content || m })),
+          messages: messages.map(m => ({
+            role: m.role || "user",
+            content: m.content || m,
+          })),
         });
       } catch (err) {
         console.warn("Could not save incoming chat to DB:", err.message || err);
@@ -83,7 +102,7 @@ app.post("/chat", async (req, res) => {
 
     const aiData = groqResp.data;
 
-    // Optional: save assistant response into the same chat doc
+    // Save assistant response into the same chat doc
     if (save && chatDoc) {
       try {
         const assistantContent = aiData?.choices?.[0]?.message?.content;
@@ -112,9 +131,18 @@ app.post("/chat", async (req, res) => {
 });
 
 // Fallback 404
-app.use((req, res) => res.status(404).json({ error: "Not found" }));
+app.use((req, res) => res.status(404).json({ error: `Route ${req.method} ${req.path} not found` }));
 
-// global error listeners
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err.message);
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).json({ error: "CORS: origin not allowed" });
+  }
+  res.status(500).json({ error: "Internal server error" });
+});
+
+// Global process listeners
 process.on("uncaughtException", (err) => {
   console.error("Uncaught exception", err);
 });
@@ -125,4 +153,5 @@ process.on("unhandledRejection", (reason) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🌐 Allowed origins:`, allowedOrigins);
 });

@@ -1,16 +1,17 @@
-# environment variables
-.env
-.env.local
-.env.development
-.env.production
-
-# node modules
+# Dependencies
 node_modules/
 
-# logs
-logs
+# Environment variables — NEVER commit this
+.env
+
+# Logs
 *.log
+npm-debug.log*
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Build output
+dist/
+build/
