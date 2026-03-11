@@ -9,3 +9,61 @@ body {
 .font-display {
   font-family: 'Poppins', 'Noto Sans', sans-serif;
 }
+
+/* ===== MOBILE PWA FIXES ===== */
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scroll */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Make all images responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile-friendly buttons */
+button, .btn {
+  min-height: 44px;   /* Apple's minimum tap target */
+  min-width: 44px;
+  cursor: pointer;
+}
+
+/* Mobile-friendly inputs */
+input, select, textarea {
+  font-size: 16px;    /* Prevents iOS zoom on focus */
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Cards stack on mobile */
+@media (max-width: 768px) {
+  .card, [class*="card"] {
+    width: 100% !important;
+    margin: 8px 0 !important;
+  }
+
+  /* Stack flex rows on mobile */
+  .row, [class*="flex"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* Readable font on small screens */
+  body {
+    font-size: 15px;
+  }
+
+  /* Full-width containers */
+  .container, [class*="container"] {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+}
