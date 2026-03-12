@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUser } from '../../context/UserContext';
 import { type TrackedApplication, getTrackedApps, saveTrackedApps } from './SchemeMatcher';
 import { BottomNav } from '../components/BottomNav';
 
@@ -23,9 +24,22 @@ const statusConfig: Record<string, { en: string; hi: string; mr: string; color: 
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
+const parseAmount = (amountStr: string) => {
+  if (!amountStr) return 0;
+  let s = amountStr.replace(/,/g, '');
+  const match = s.match(/\d+(\.\d+)?/);
+  if (!match) return 0;
+  let num = parseFloat(match[0]);
+  if (s.toLowerCase().includes('l') || s.toLowerCase().includes('lakh') || s.toLowerCase().includes('लाख')) {
+    num *= 100000;
+  }
+  return num;
+};
+
 export function ApplicationTracking() {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { userData, updateUserData } = useUser();
   const isHindi = language === 'hi';
   const isMarathi = language === 'mr';
 
@@ -72,12 +86,44 @@ export function ApplicationTracking() {
 
   // ── Actions ───────────────────────────────────────────────────────────────
   const updateStatus = useCallback((schemeId: string, newStatus: TrackedApplication['status']) => {
-    setApps(prev => {
-      const updated = prev.map(a => a.schemeId === schemeId ? { ...a, status: newStatus } : a);
-      saveTrackedApps(updated);
-      return updated;
-    });
-  }, []);
+    if (newStatus === 'disbursed') {
+      const targetApp = apps.find(a => a.schemeId === schemeId);
+      if (targetApp && targetApp.status !== 'disbursed') {
+        const amountToAdd = parseAmount(targetApp.amount);
+        if (amountToAdd > 0) {
+          const newTx = {
+            id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            scheme: targetApp.schemeName,
+            schemeHi: targetApp.schemeNameHi,
+            schemeMr: targetApp.schemeNameMr,
+            amount: amountToAdd,
+            date: new Date().toISOString().split('T')[0],
+            year: new Date().getFullYear(),
+            category: 'Scheme Disbursement'
+          };
+          updateUserData({
+            financialLedger: [...(userData.financialLedger || []), newTx]
+          });
+        }
+      }
+      setApps(prev => {
+        const updated = prev.filter(a => a.schemeId !== schemeId);
+        saveTrackedApps(updated);
+        return updated;
+      });
+    } else {
+      setApps(prev => {
+        const updated = prev.map(a => {
+          if (a.schemeId === schemeId) {
+            return { ...a, status: newStatus };
+          }
+          return a;
+        });
+        saveTrackedApps(updated);
+        return updated;
+      });
+    }
+  }, [apps, userData, updateUserData]);
 
   const removeApp = useCallback((schemeId: string) => {
     setApps(prev => {
@@ -400,7 +446,7 @@ export function ApplicationTracking() {
                       <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-4">
 
                         {/* Documents needed */}
-                        {app.documentsNeeded?.length > 0 && (
+                        {app.documentsNeeded && app.documentsNeeded.length > 0 && (
                           <div>
                             <h4 className="text-[12px] font-bold text-[#1C1C1E] mb-2 flex items-center gap-1.5">
                               <FileText className="w-3.5 h-3.5 text-[#F5A623]" />
@@ -420,7 +466,7 @@ export function ApplicationTracking() {
                         )}
 
                         {/* Steps */}
-                        {app.steps?.length > 0 && (
+                        {app.steps && app.steps.length > 0 && (
                           <div>
                             <h4 className="text-[12px] font-bold text-[#1C1C1E] mb-2 flex items-center gap-1.5">
                               <CheckCircle className="w-3.5 h-3.5 text-[#2D6A2D]" />

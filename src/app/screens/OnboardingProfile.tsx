@@ -2,7 +2,7 @@
 // src/screens/OnboardingProfile.tsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Mic, MicOff, Phone, User, Calendar, Users, Sparkles, AlertCircle, X, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff, Phone, FileText, Calendar, Globe, Sparkles, AlertCircle, X, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useUser } from '../../context/UserContext';
@@ -603,7 +603,7 @@ export function OnboardingProfile() {
               {/* Name */}
               <div>
                 <label className={labelClass}>
-                  <User className="w-3.5 h-3.5" />
+                  <FileText className="w-3.5 h-3.5" />
                   {localize('Full Name', 'पूरा नाम', 'पूर्ण नाव')}
                   <span className="text-red-500">*</span>
                   {isFieldValid('name') && <CheckCircle className="w-3.5 h-3.5 text-green-500 ml-auto" />}
@@ -721,7 +721,7 @@ export function OnboardingProfile() {
               {/* Gender */}
               <div>
                 <label className={labelClass}>
-                  <Users className="w-3.5 h-3.5" />
+                  <Globe className="w-3.5 h-3.5" />
                   {localize('Gender', 'लिंग', 'लिंग')}
                   <span className="text-red-500">*</span>
                   {isFieldValid('gender') && <CheckCircle className="w-3.5 h-3.5 text-green-500 ml-auto" />}

@@ -49,6 +49,8 @@ export interface TrackedApplication {
     appliedDate: string;
     deadline: string;
     notes: string;
+    documentsNeeded?: string[];
+    steps?: string[];
 }
 
 interface FormData {
@@ -109,13 +111,13 @@ export function SchemeMatcher() {
         district: userData?.district || '',
         landSize: userData?.landSize?.toString() || '',
         landUnit: userData?.landUnit || 'acres',
-        crops: Array.isArray(userData?.crops) ? userData.crops.join(', ') : (userData?.crops || ''),
-        seasons: Array.isArray(userData?.seasons) ? userData.seasons.join(', ') : (userData?.seasons || ''),
+        crops: Array.isArray(userData?.selectedCrops) ? userData.selectedCrops.join(', ') : (userData?.selectedCrops || ''),
+        seasons: Array.isArray(userData?.selectedSeasons) ? userData.selectedSeasons.join(', ') : (userData?.selectedSeasons || ''),
         irrigation: Array.isArray(userData?.irrigation) ? userData.irrigation.join(', ') : (userData?.irrigation || ''),
         category: userData?.category || '',
         annualIncome: userData?.annualIncome || '',
         incomeSource: userData?.incomeSource || 'Farming',
-        bankAccount: userData?.bankAccount ?? false,
+        bankAccount: !!userData?.bankAccount,
         aadhaarVerified: userData?.aadhaarVerified ?? false,
     });
 
@@ -214,6 +216,8 @@ export function SchemeMatcher() {
             appliedDate: new Date().toISOString().split('T')[0],
             deadline: scheme.deadline,
             notes: '',
+            documentsNeeded: scheme.documentsNeeded,
+            steps: scheme.steps,
         };
         apps.push(newApp);
         saveTrackedApps(apps);
@@ -464,7 +468,7 @@ IMPORTANT RULES:
                         >
                             <h3 className="font-bold text-[16px] text-[#1C1C1E] mb-4 flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-xl bg-[#F5A623]/20 flex items-center justify-center">
-                                    <User className="w-4 h-4 text-[#F5A623]" />
+                                    <FileText className="w-4 h-4 text-[#F5A623]" />
                                 </div>
                                 {getText('Farmer Profile', 'à¤•à¤¿à¤¸à¤¾à¤¨ à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤²', 'à¤¶à¥‡à¤¤à¤•à¤°à¥€ à¤ªà¥à¤°à¥‹à¤«à¤¾à¤‡à¤²')}
                             </h3>

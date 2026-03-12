@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   ArrowLeft, ChevronDown, ChevronUp, Edit2, Camera,
-  LogOut, User, Sprout, Wallet, FileText,
+  LogOut, Settings, Sprout, Wallet, FileText,
   Globe, Upload, X, Check, Plus, Sparkles, Shield,
   AlertCircle,
 } from 'lucide-react';
@@ -710,7 +710,7 @@ export function Profile() {
           <button onClick={() => toggleSection('personal')} className="w-full px-5 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center">
-                <User className="w-5 h-5 text-blue-500" />
+                <FileText className="w-5 h-5 text-blue-500" />
               </div>
               <div className="text-left">
                 <h3 className="font-semibold text-[15px] text-[#1C1C1E]">

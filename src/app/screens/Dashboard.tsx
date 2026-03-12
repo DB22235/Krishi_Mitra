@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Bell, Menu, ArrowRight, Search, FileText, BarChart3, AlertCircle, Sparkles, ChevronRight, Calendar, CheckCircle } from 'lucide-react';
+import { Bell, Menu, ArrowRight, Search, FileText, BarChart3, AlertCircle, Sparkles, ChevronRight, Calendar, CheckCircle, Wallet } from 'lucide-react';
+import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { BottomNav } from '../components/BottomNav';
@@ -74,59 +75,29 @@ export function Dashboard() {
   };
 
 
-  const schemes = [
-    {
-      id: 'pm-kisan',
-      name: 'PM-Kisan Samman Nidhi',
-      nameHi: 'प्रधानमंत्री किसान सम्मान निधि',
-      nameMr: 'प्रधानमंत्री किसान सन्मान निधी',
-      amount: '₹6,000/year',
-      amountHi: '₹6,000/वर्ष',
-      amountMr: '₹6,000/वर्ष',
-      type: localize('Central Govt', 'केंद्र सरकार', 'केंद्र सरकार'),
-      deadline: localize('March 31', '31 मार्च', '31 मार्च'),
-      deadlineMr: '31 मार्च',
-      daysLeft: 15,
-      docsRequired: 3,
-      eligible: true,
-      logo: '🏛️',
-      color: 'bg-green-500',
-    },
-    {
-      id: 'pmfby',
-      name: 'PM Fasal Bima Yojana',
-      nameHi: 'प्रधानमंत्री फसल बीमा योजना',
-      nameMr: 'प्रधानमंत्री पीक विमा योजना',
-      amount: 'Up to ₹2L',
-      amountHi: '₹2 लाख तक',
-      amountMr: '₹2 लाखांपर्यंत',
-      type: localize('Central Govt', 'केंद्र सरकार', 'केंद्र सरकार'),
-      deadline: localize('Feb 28', '28 फरवरी', '28 फेब्रुवारी'),
-      deadlineMr: '28 फेब्रुवारी',
-      daysLeft: 7,
-      docsRequired: 4,
-      eligible: true,
-      logo: '🌾',
-      color: 'bg-blue-500',
-    },
-    {
-      id: 'soil-health',
-      name: 'Soil Health Card Scheme',
-      nameHi: 'मृदा स्वास्थ्य कार्ड योजना',
-      nameMr: 'मृदा आरोग्य कार्ड योजना',
-      amount: 'Free Testing',
-      amountHi: 'मुफ्त जांच',
-      amountMr: 'मोफत तपासणी',
-      type: localize('State Govt', 'राज्य सरकार', 'राज्य सरकार'),
-      deadline: localize('March 15', '15 मार्च', '15 मार्च'),
-      deadlineMr: '15 मार्च',
-      daysLeft: 21,
-      docsRequired: 2,
-      eligible: true,
-      logo: '🌱',
-      color: 'bg-amber-500',
-    },
-  ];
+  // Financial Ledger calculations
+  const totalReceived = userData.financialLedger
+    ? userData.financialLedger.reduce((sum, tx) => sum + tx.amount, 0)
+    : 0;
+
+  // Format data for Recharts (Cumulative sum for stock-like graph)
+  const sortedLedger = userData.financialLedger
+    ? [...userData.financialLedger].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    : [];
+
+  let cumulative = 0;
+  // Initialize with a starting point if transactions exist
+  const chartData: any[] = sortedLedger.length > 0 ? [{ date: 'Start', amount: 0, schemeName: '' }] : [];
+
+  sortedLedger.forEach(tx => {
+    cumulative += tx.amount;
+    const dateObj = new Date(tx.date);
+    chartData.push({
+      date: dateObj.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+      amount: cumulative,
+      schemeName: localize(tx.scheme, tx.schemeHi, tx.schemeMr)
+    });
+  });
 
 
   const quickActions = [
@@ -161,28 +132,7 @@ export function Dashboard() {
   ];
 
 
-  const urgentAlerts = [
-    {
-      id: 1,
-      title: localize('PM-Kisan Application Deadline', 'PM-Kisan आवेदन की आखिरी तारीख', 'PM-Kisan अर्जाची अंतिम तारीख'),
-      subtitle: localize('Only 3 days remaining', 'केवल 3 दिन बाकी हैं', 'फक्त 3 दिवस बाकी'),
-      type: 'urgent',
-      color: 'border-[#FB923C]',
-      dotColor: 'bg-[#F87171]',
-      action: localize('Apply Now', 'अभी आवेदन करें', 'आता अर्ज करा'),
-      path: '/scheme-matcher/pm-kisan',
-    },
-    {
-      id: 2,
-      title: localize('PMFBY Application Under Review', 'PMFBY आवेदन अंडर रिव्यू में है', 'PMFBY अर्ज पुनरावलोकनाधीन'),
-      subtitle: localize('Estimated time: 7 days', 'अनुमानित समय: 7 दिन', 'अंदाजे वेळ: 7 दिवस'),
-      type: 'info',
-      color: 'border-[#60A5FA]',
-      dotColor: 'bg-[#60A5FA]',
-      action: localize('View Status', 'स्थिति देखें', 'स्थिती पहा'),
-      path: '/applications',
-    },
-  ];
+
 
 
   // Get pending task text based on language
@@ -262,7 +212,7 @@ export function Dashboard() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-3xl">👨‍🌾</span>
+                  <span className="text-3xl">🌱</span>
                 )}
               </div>
               <div>
@@ -347,59 +297,11 @@ export function Dashboard() {
       </div>
 
 
-      {/* Scheme Match Banner */}
-      <div className="px-4 -mt-5 mb-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          onClick={() => navigate('/schemes')}
-          className="bg-white rounded-3xl p-5 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 rounded-2xl bg-[#F5A623]/10 flex items-center justify-center">
-                  <span className="text-2xl">🎯</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-[16px] text-[#1C1C1E]">
-                    {localize(
-                      `${getMatchedSchemesCount()} Schemes Found for You!`,
-                      `आपके लिए ${getMatchedSchemesCount()} योजनाएं मिलीं!`,
-                      `तुमच्यासाठी ${getMatchedSchemesCount()} योजना सापडल्या!`
-                    )}
-                  </h3>
-                  <p className="text-[12px] text-[#6B7280]">
-                    {localize('Based on your profile', 'आपकी प्रोफ़ाइल के आधार पर', 'तुमच्या प्रोफाइलवर आधारित')}
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-2 flex-wrap mt-3">
-                <span className="bg-[#F7F3EE] text-[#1C1C1E] px-3 py-1.5 rounded-xl text-[11px] font-semibold">
-                  PM-Kisan
-                </span>
-                <span className="bg-[#F7F3EE] text-[#1C1C1E] px-3 py-1.5 rounded-xl text-[11px] font-semibold">
-                  PMFBY
-                </span>
-                <span className="bg-[#F5A623]/10 text-[#F5A623] px-3 py-1.5 rounded-xl text-[11px] font-semibold">
-                  +{getMatchedSchemesCount() - 2} {localize('more', 'और', 'अधिक')}
-                </span>
-              </div>
-            </div>
-            <motion.div
-              whileHover={{ x: 5 }}
-              className="w-10 h-10 rounded-full bg-[#F5A623] flex items-center justify-center ml-3"
-            >
-              <ArrowRight className="w-5 h-5 text-white" />
-            </motion.div>
-          </div>
-        </motion.div>
-      </div>
+
 
 
       {/* Quick Actions */}
-      <div className="px-4 mb-6">
+      <div className="px-4 mt-6 mb-6">
         <motion.h3
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -435,7 +337,7 @@ export function Dashboard() {
       </div>
 
 
-      {/* Urgent Alerts */}
+      {/* Financial Ledger Section */}
       <div className="px-4 mb-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -444,141 +346,100 @@ export function Dashboard() {
           className="flex items-center justify-between mb-3"
         >
           <h3 className="font-bold text-[16px] text-[#1C1C1E] flex items-center gap-2">
-            <span>⚠️</span>
-            {localize('Urgent Alerts', 'जरूरी सूचनाएं', 'तातडीच्या सूचना')}
+            <Wallet className="w-5 h-5 text-[#F5A623]" />
+            {localize('Your Financial Ledger', 'आपकी वित्तीय खाता-बही', 'तुमची आर्थिक नोंदवही')}
           </h3>
-          <button
-            onClick={() => navigate('/notifications')}
-            className="text-[#F5A623] text-[12px] font-semibold flex items-center gap-1"
-          >
-            {localize('View All', 'सभी देखें', 'सर्व पहा')}
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </motion.div>
 
-
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4">
-          {urgentAlerts.map((alert, index) => (
-            <motion.div
-              key={alert.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 + index * 0.1 }}
-              className={`bg-white rounded-2xl p-4 min-w-[280px] border-l-4 ${alert.color} shadow-sm flex-shrink-0`}
-            >
-              <div className="flex items-start gap-2 mb-3">
-                <div className={`w-2 h-2 ${alert.dotColor} rounded-full mt-1.5 flex-shrink-0`} />
-                <div className="flex-1">
-                  <h4 className="font-semibold text-[14px] text-[#1C1C1E] mb-1 leading-tight">
-                    {alert.title}
-                  </h4>
-                  <p className="text-[12px] text-[#6B7280]">
-                    {alert.subtitle}
-                  </p>
-                </div>
-              </div>
-              <motion.button
-                onClick={() => navigate(alert.path)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full py-2.5 rounded-xl text-[13px] font-semibold ${alert.type === 'urgent'
-                  ? 'bg-[#F5A623] text-white'
-                  : 'bg-[#F7F3EE] text-[#1C1C1E]'
-                  }`}
-              >
-                {alert.action}
-              </motion.button>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-
-      {/* Recommended Schemes */}
-      <div className="px-4 mb-6">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex items-center justify-between mb-3"
+          className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100"
         >
-          <h3 className="font-bold text-[16px] text-[#1C1C1E]">
-            {localize('Recommended Schemes', 'आपके लिए अनुशंसित योजनाएं', 'तुमच्यासाठी शिफारस केलेल्या योजना')}
-          </h3>
-          <button
-            onClick={() => navigate('/schemes')}
-            className="text-[#F5A623] text-[12px] font-semibold flex items-center gap-1"
-          >
-            {localize('View More', 'और देखें', 'अधिक पहा')}
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </motion.div>
+          <div className="mb-6">
+            <p className="text-[13px] text-[#6B7280] font-medium mb-1">
+              {localize('Total Direct Benefits Received', 'प्राप्त कुल प्रत्यक्ष लाभ', 'मिळालेले एकूण थेट लाभ')}
+            </p>
+            <h2 className="text-3xl font-black text-[#1A3C1A]">
+              ₹{totalReceived.toLocaleString('en-IN')}
+            </h2>
+          </div>
 
+          {/* Stock-style Area Chart */}
+          <div className="h-48 w-full mb-6 mt-2 relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="date"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 10, fill: '#9CA3AF' }}
+                  dy={10}
+                  minTickGap={15}
+                />
+                <Tooltip
+                  cursor={{ stroke: '#9CA3AF', strokeWidth: 1, strokeDasharray: '4 4' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: '#1C1C1E', color: 'white' }}
+                  itemStyle={{ color: '#22c55e', fontWeight: 'bold' }}
+                  labelStyle={{ color: '#9CA3AF', marginBottom: '4px', fontSize: '12px' }}
+                  formatter={(value: number, name: string, props: any) => [
+                    `₹${value.toLocaleString('en-IN')}`,
+                    props.payload.schemeName || localize('Total Balance', 'कुल बैलेंस', 'एकूण शिल्लक')
+                  ]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#22c55e"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorAmount)"
+                  activeDot={{ r: 6, fill: '#22c55e', stroke: 'white', strokeWidth: 2 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-        <div className="space-y-3">
-          {schemes.map((scheme, index) => (
-            <motion.div
-              key={scheme.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
-              onClick={() => navigate(`/scheme-matcher/${scheme.id}`)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 cursor-pointer"
-            >
-              <div className="flex items-start gap-3">
-                {/* Scheme Icon */}
-                <div className={`w-12 h-12 rounded-2xl ${scheme.color}/10 flex items-center justify-center flex-shrink-0`}>
-                  <span className="text-2xl">{scheme.logo}</span>
-                </div>
+          {/* Ledger List */}
+          <div className="space-y-4">
+            <h4 className="font-bold text-[14px] text-[#1C1C1E] mb-2">
+              {localize('Recent Deposits', 'हाल के जमा', 'नुकत्याच झालेल्या जमा')}
+            </h4>
 
-
-                {/* Scheme Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <h4 className="font-semibold text-[14px] text-[#1C1C1E] leading-tight">
-                      {localize(scheme.name, scheme.nameHi, scheme.nameMr)}
-                    </h4>
-                    {scheme.eligible && (
-                      <div className="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded-full flex-shrink-0">
-                        <CheckCircle className="w-3 h-3 text-green-500" />
-                        <span className="text-[10px] text-green-600 font-semibold">
-                          {localize('Eligible', 'पात्र', 'पात्र')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <p className="text-[12px] text-[#6B7280] mb-2">{scheme.type}</p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[#F5A623] font-bold text-[14px]">
-                        {localize(scheme.amount, scheme.amountHi, scheme.amountMr)}
-                      </span>
-                      <span className="text-[11px] text-[#6B7280] flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {scheme.deadline}
-                      </span>
+            {userData.financialLedger && userData.financialLedger.map((tx, index) => (
+              <div key={tx.id} className="flex flex-col gap-1 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                      <span className="text-lg">🏛️</span>
                     </div>
-                    <div className={`px-2 py-1 rounded-lg text-[10px] font-semibold ${scheme.daysLeft <= 7
-                      ? 'bg-red-50 text-red-600'
-                      : scheme.daysLeft <= 15
-                        ? 'bg-amber-50 text-amber-600'
-                        : 'bg-green-50 text-green-600'
-                      }`}>
-                      {scheme.daysLeft} {localize('days', 'दिन', 'दिवस')}
+                    <div>
+                      <h5 className="font-semibold text-[14px] text-[#1C1C1E]">
+                        {localize(tx.scheme, tx.schemeHi, tx.schemeMr)}
+                      </h5>
+                      <span className="text-[12px] text-[#6B7280]">{tx.category}</span>
                     </div>
                   </div>
+                  <div className="text-right">
+                    <p className="font-bold text-[14px] text-green-600">
+                      +₹{tx.amount.toLocaleString('en-IN')}
+                    </p>
+                    <span className="text-[11px] text-[#6B7280]">
+                      {new Date(tx.date).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
-
-
-                <ChevronRight className="w-5 h-5 text-gray-300 flex-shrink-0" />
               </div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
 

@@ -121,7 +121,7 @@
 // }
 
 
-import { Home, Search, FileText, MessageCircle, User, Users } from 'lucide-react';
+import { Home, Search, FileText, MessageCircle, Settings, Globe } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -151,7 +151,7 @@ export function BottomNav() {
       path: '/schemes'
     },
     {
-      icon: Users,
+      icon: Globe,
       label: 'Community',
       labelHi: 'समुदाय',
       labelMr: 'समुदाय',
@@ -172,7 +172,7 @@ export function BottomNav() {
       path: '/chat'
     },
     {
-      icon: User,
+      icon: Settings,
       label: 'Profile',
       labelHi: 'प्रोफाइल',
       labelMr: 'प्रोफाइल',

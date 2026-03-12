@@ -760,7 +760,7 @@ const allSchemes: Scheme[] = [
     deadlineHi: 'चालू',
     docsRequired: 3,
     eligible: true,
-    logo: '👨‍🌾',
+    logo: '🌱',
     state: ['All States', 'Maharashtra', 'Bihar', 'Jharkhand', 'Assam'],
     casteCategories: ['SC', 'OBC', 'ST'],
     tags: ['Small Farmer', 'Pension', 'Old Age', 'Social Security'],

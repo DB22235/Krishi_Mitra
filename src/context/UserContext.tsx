@@ -25,6 +25,16 @@ export interface UserData {
   bankAccount: string;
   ifscCode: string;
   pmKisanStatus: string;
+  financialLedger: {
+    id: string;
+    scheme: string;
+    schemeHi: string;
+    schemeMr: string;
+    amount: number;
+    date: string;
+    year: number;
+    category: string;
+  }[];
 
   // Documents
   documents: DocumentInfo[];
@@ -81,6 +91,7 @@ const defaultUserData: UserData = {
   bankAccount: '',
   ifscCode: '',
   pmKisanStatus: '',
+  financialLedger: [],
   documents: [
     { id: 'aadhaar', name: 'Aadhaar Card', nameHi: 'आधार कार्ड', nameMr: 'आधार कार्ड', status: 'pending', verified: false },
     { id: 'land', name: 'Land Records', nameHi: 'भूमि रिकॉर्ड', nameMr: 'जमीन नोंदी', status: 'pending', verified: false },

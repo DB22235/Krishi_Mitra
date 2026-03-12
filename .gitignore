@@ -20,6 +20,8 @@ out/
 .env.production
 .env.*.local
 *.env
+server/.env
+*/.env
 
 # Operating System
 .DS_Store

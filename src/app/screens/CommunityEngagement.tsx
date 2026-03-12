@@ -1735,7 +1735,6 @@ import {
     ChevronRight,
     Star,
     TrendingUp,
-    Users,
     Award,
     Sparkles,
     MapPin,
@@ -3444,7 +3443,7 @@ export function CommunityEngagement() {
                 {/* ─── Community Stats ───────────────────────────────── */}
                 <div className="grid grid-cols-4 gap-2 mb-4">
                     {[
-                        { icon: Users, label: t('happyFarmers'), value: '2.5L+', color: '#2D6A2D' },
+                        { icon: Heart, label: t('happyFarmers'), value: '2.5L+', color: '#2D6A2D' },
                         { icon: TrendingUp, label: t('successRate'), value: '94%', color: '#F5A623' },
                         { icon: Award, label: t('schemesAvailed'), value: '15+', color: '#60A5FA' },
                         { icon: IndianRupee, label: t('totalBenefits'), value: '₹500Cr', color: '#97BC62' },
